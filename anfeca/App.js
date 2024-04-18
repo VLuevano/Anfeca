@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Image, Text, View, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, Image, Text, View, TouchableOpacity, TextInput, handlePress } from "react-native";
 
 export default function FrmIniciarSesionCorreo() {
   const handleForgotPassword = () => {
@@ -53,6 +53,9 @@ export default function FrmIniciarSesionCorreo() {
     </View>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   IniciarSesiNCorreo: {
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
 });
 
 // Segunda función IniciarSesiN
-
+/*
 export default function IniciarSesiN() {
   return (
     <View style={styles.IniciarSesiN}>
@@ -194,7 +197,9 @@ export default function IniciarSesiN() {
     </View>
   )
 }
+*/
 
+/*
 const styles = StyleSheet.create({
   IniciarSesiN: {
     position: "relative",
@@ -316,3 +321,4 @@ const styles = StyleSheet.create({
     height: 38,
   },
 });
+*/
