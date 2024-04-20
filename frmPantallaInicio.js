@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TouchableOpacity } from 'react-native';
-import { GestureHandlerRootView} from 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
 
 export default function PantallaInicio() {
@@ -26,7 +26,7 @@ export default function PantallaInicio() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('CrearCuenta')} // Cambiar a nombre registrado de la pantalla
+          onPress={() => navigation.navigate('IniciarSesion')} // Cambiar a nombre registrado de la pantalla
         >
           <Text style={styles.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>

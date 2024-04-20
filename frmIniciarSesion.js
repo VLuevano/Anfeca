@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { GestureHandlerRootView} from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
 
-export default function PantallaCrearCuenta() {
+export default function PantallaIniciarSesion() {
 
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.espacioSuperior}></View>
-      <Text style={styles.titulo}>Crear cuenta</Text>
+      <Text style={styles.titulo}>Iniciar sesión</Text>
       <TouchableOpacity style={styles.botonVolver} onPress={() => navigation.navigate('Inicio')}>
         <Image
           source={require('./Recursos/Imágenes/flechaRetroceder.png')}
@@ -18,21 +18,21 @@ export default function PantallaCrearCuenta() {
         />
       </TouchableOpacity>
       <TouchableOpacity style={styles.boton}>
-        <Text style={styles.textoBoton}>Registrarse con correo electrónico</Text>
+        <Text style={styles.textoBoton}>Iniciar sesión con correo electrónico</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.boton}>
         <Image
           style={styles.logo}
           source={require('./Recursos/Imágenes/LogoFacebook.png')}
         />
-        <Text style={styles.textoBoton}>Registrarse con Facebook</Text>
+        <Text style={styles.textoBoton}>Iniciar sesión con Facebook</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.boton}>
         <Image
           style={styles.logo}
           source={require('./Recursos/Imágenes/LogoGoogle.png')}
         />
-        <Text style={styles.textoBoton}>Registrarse con Google</Text>
+        <Text style={styles.textoBoton}>Iniciar sesión con Google</Text>
       </TouchableOpacity>
     </View>
   );
