@@ -2,9 +2,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GestureHandlerRootView} from 'react-native-gesture-handler'
-import PantallaInicio from './frmPantallaInicio'; 
-import CrearCuenta from './frmCrearCuenta'; 
-import IniciarSesion from './frmIniciarSesion'; 
+import PantallaInicio from './src/Vista/frmPantallaInicio'; 
+import CrearCuenta from './src/Vista/frmCrearCuenta'; 
+import IniciarSesion from './src/Vista/frmIniciarSesion'; 
 
 const Stack = createStackNavigator();
 

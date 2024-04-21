@@ -2,33 +2,34 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
+import { sharedStyles } from './styles';
 
 export default function PantallaInicio() {
   const navigation = useNavigation();
 
   return (
     <ImageBackground
-      source={require('./Recursos/Imágenes/FondoInicio.jpg')}
+      source={require('../../Recursos/Imágenes/FondoInicio.jpg')}
       style={styles.container}
     >
       <View style={styles.logoContainer}>
         <Image
-          source={require('./Recursos/Imágenes/VITA3.png')}
+          source={require('../../Recursos/Imágenes/VITA3.png')}
           style={styles.logo}
         />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('CrearCuenta')} // Cambiar a nombre registrado de la pantalla
+          onPress={() => navigation.navigate('CrearCuenta')}
         >
-          <Text style={styles.buttonText}>Crear cuenta</Text>
+          <Text style={sharedStyles.textoBoton}>Crear cuenta</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('IniciarSesion')} // Cambiar a nombre registrado de la pantalla
         >
-          <Text style={styles.buttonText}>Iniciar sesión</Text>
+          <Text style={sharedStyles.textoBoton}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -61,9 +62,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
   },
-  buttonText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  sharedStyles,
 });
