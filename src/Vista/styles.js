@@ -17,7 +17,7 @@ export const sharedStyles = StyleSheet.create({
         zIndex: 1,
     },
     titulo: {
-        fontSize: 40,
+        fontSize: 30,
         fontWeight: 'bold',
         marginBottom: 20,
         marginTop: 70,
@@ -53,5 +53,17 @@ export const sharedStyles = StyleSheet.create({
         width: 30,
         height: 30,
         marginRight: 20,
+    },
+    textos: {
+        fontSize: 15,
+        marginBottom: 10,
+    },
+    entradaTexto: {
+        height: 50,
+        width: '80%',
+        backgroundColor: '#C8CCD8', // Fondo gris
+        marginBottom: 20,
+        paddingHorizontal: 10,
+        borderRadius: 10, // Bordes redondeados
     },
 });

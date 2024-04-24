@@ -11,14 +11,14 @@ export default function PantallaCrearCuenta() {
   return (
     <View style={sharedStyles.container}>
       <View style={sharedStyles.espacioSuperior}></View>
-      <Text style={sharedStyles.titulo}>Crear cuenta</Text>
+      <Text style={sharedStyles.titulo}>Registrarse</Text>
       <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('Inicio')}>
         <Image
           source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
           style={sharedStyles.iconoVolver}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={sharedStyles.boton}>
+      <TouchableOpacity style={sharedStyles.boton} onPress={() => navigation.navigate('CrearCuenta1')}>
         <Text style={sharedStyles.textoBoton}>Registrarse con correo electrónico</Text>
       </TouchableOpacity>
       <TouchableOpacity style={sharedStyles.boton}>
