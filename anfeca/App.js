@@ -1,6 +1,17 @@
-import React from "react";
-import { StyleSheet, Image, Text, View, TouchableOpacity, TextInput, handlePress } from "react-native";
 
+import React from "react";
+import Navigation from "./src/Navigation";
+
+
+
+export default function App(){
+  return(
+    <Navigation />
+  )
+}
+
+
+/*
 export default function FrmIniciarSesionCorreo() {
   const handleForgotPassword = () => {
     console.log("¿Olvidaste tu contraseña? clickeado");
@@ -54,9 +65,7 @@ export default function FrmIniciarSesionCorreo() {
   );
 }
 
-
-
-
+/*
 const styles = StyleSheet.create({
   IniciarSesiNCorreo: {
     position: "relative",
@@ -161,7 +170,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
+*/
+/*
 // Segunda función IniciarSesiN
 /*
 export default function IniciarSesiN() {
