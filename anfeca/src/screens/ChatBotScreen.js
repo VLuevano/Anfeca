@@ -1,6 +1,12 @@
 import React from "react"
 import { StyleSheet, Image, Text, View, ImageBackground } from "react-native"
 
+const greyP = "#C8CCD8";
+const pinkP = "#FFABC5";
+const yellowP = "#F8DD6C";
+const purpleP = "#CDBFEA";
+const backgroundP = "#E0E6F6";
+
 export default function ChatbotScreen() {
     return (
         <View style={styles.Chatbot}>
@@ -26,6 +32,9 @@ export default function ChatbotScreen() {
                     
                 </View>
 
+                <View style={styles.Group035}>
+                    <Text style={styles.HolaQuNecesitas}>Hola, ¿Qué necesitas?</Text>
+                </View>
             </View>
         </View>
     )

@@ -3,8 +3,10 @@ import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'reac
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
-const yellowP = "#F8DD6C"
-const backgroundP = "#E0E6F6"
+const yellowP = "#F8DD6C";
+const purpleP = "#CDBFEA";
+const backgroundP = "#E0E6F6";
+
 
 export default function CuentaScreen() {
     return (
