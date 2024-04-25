@@ -1,20 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Button} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
-import { sharedStyles } from './styles';
 import { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
 import { Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { sharedStyles } from './styles';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 function StepOne({ onNext }) {
+
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -23,28 +25,40 @@ function StepOne({ onNext }) {
     };
 
     return (
-        <View>
-            <Text>Ingresa tu correo electrónico</Text>
+        <View style={sharedStyles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
+                <Image
+                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    style={sharedStyles.iconoVolver}
+                />
+            </TouchableOpacity>
+            <Text style={sharedStyles.titulo}>Registrarse</Text>
+            <Text style={sharedStyles.textos}>Ingresa tu correo electrónico</Text>
             <TextInput
                 onChangeText={setEmail}
+                style={sharedStyles.entradaTexto}
                 placeholder="tucorreo@ejemplo.com"
                 value={email}
             />
-            <Text>Ingresa tu contraseña</Text>
+            <Text style={sharedStyles.textos}>Ingresa tu contraseña</Text>
             <TextInput
                 onChangeText={setPassword}
                 placeholder="Contraseña"
+                style={sharedStyles.entradaTexto}
                 value={password}
                 secureTextEntry={true}
             />
-            <TouchableOpacity onPress={handleNext}>
-                <Text>Continuar</Text>
+            <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
+                <Text style={sharedStyles.textoBoton}>Continuar</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 function StepTwo({ onNext }) {
+
+    const navigation = useNavigation();
     const [username, setUsername] = useState('');
 
     const handleNext = () => {
@@ -52,21 +66,32 @@ function StepTwo({ onNext }) {
     };
 
     return (
-        <View>
-            <Text>Ingresa tu nombre de usuario</Text>
+        <View style={sharedStyles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
+                <Image
+                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    style={sharedStyles.iconoVolver}
+                />
+            </TouchableOpacity>
+            <Text style={sharedStyles.titulo}>Registrarse</Text>
+            <Text style={sharedStyles.textos}>Ingresa tu nombre de usuario</Text>
             <TextInput
                 onChangeText={setUsername}
                 placeholder="Nombre de usuario"
+                style={sharedStyles.entradaTexto}
                 value={username}
             />
-            <TouchableOpacity onPress={handleNext}>
-                <Text>Continuar</Text>
+            <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
+                <Text style={sharedStyles.textoBoton}>Continuar</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 function StepThree({ onNext }) {
+    
+    const navigation = useNavigation();
     const [gender, setGender] = useState('');
 
     const handleNext = () => {
@@ -74,26 +99,43 @@ function StepThree({ onNext }) {
     };
 
     return (
-        <View>
-            <Text>Selecciona tu sexo</Text>
+        <View style={sharedStyles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
+                <Image
+                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    style={sharedStyles.iconoVolver}
+                />
+            </TouchableOpacity>
+            <Text style={sharedStyles.titulo}>Registrarse</Text>
+            <Text style={sharedStyles.textos}>Selecciona tu sexo</Text>
             <Picker
                 selectedValue={gender}
                 onValueChange={(itemValue) => setGender(itemValue)}
+                style={sharedStyles.entradaTexto}
             >
                 <Picker.Item label="Masculino" value="male" />
                 <Picker.Item label="Femenino" value="female" />
             </Picker>
-            <TouchableOpacity onPress={handleNext}>
-                <Text>Continuar</Text>
+            <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
+                <Text style={sharedStyles.textoBoton}>Continuar</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
-function StepFour({ onNext }) {
+function StepFour({ onNext, onSelect }) {
+
+    const navigation = useNavigation();
     const [avatar, setAvatar] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const avatars = [
+        { id: 1, image: require('../../Recursos/Imágenes/avatar1.jpg') },
+        { id: 2, image: require('../../Recursos/Imágenes/avatar2.jpeg') },
+        { id: 3, image: require('../../Recursos/Imágenes/avatar3.jpg') },
+    ];
 
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || dateOfBirth;
@@ -105,13 +147,40 @@ function StepFour({ onNext }) {
         onNext({ avatar, dateOfBirth });
     };
 
-    return (
-        <View>
-            <Text>Selecciona tu avatar</Text>
-            {/* Lógica para seleccionar un avatar */}
+    const [selectedAvatar, setSelectedAvatar] = useState(null);
 
-            <Text>Selecciona tu fecha de nacimiento</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+    const handleAvatarPress = (avatar) => {
+        setSelectedAvatar(avatar);
+        onSelect && onSelect(avatar);
+    };
+
+    return (
+        <View style={sharedStyles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
+                <Image
+                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    style={sharedStyles.iconoVolver}
+                />
+            </TouchableOpacity>
+            <Text style={sharedStyles.titulo}>Registrarse</Text>
+            <Text style={sharedStyles.textos}>Selecciona tu avatar</Text>
+            <FlatList
+                data={avatars}
+                horizontal
+                renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => handleAvatarPress(item)} style={{ margin: 5 }}>
+                        <Image source={item.image} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                    </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.id.toString()}
+            />
+            {selectedAvatar && (
+                <Text>Avatar seleccionado: {selectedAvatar.id}</Text>
+            )}
+
+            <Text style={sharedStyles.textos}>Selecciona tu fecha de nacimiento</Text>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={sharedStyles.entradaTexto}>
                 <Text>{dateOfBirth.toDateString()}</Text>
             </TouchableOpacity>
 
@@ -125,14 +194,15 @@ function StepFour({ onNext }) {
                 />
             )}
 
-            <TouchableOpacity onPress={handleNext}>
-                <Text>Crear cuenta</Text>
+            <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
+                <Text style={sharedStyles.textoBoton}>Crear cuenta</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 function RegistrationScreen() {
+    const navigation = useNavigation();
     const [step, setStep] = useState(1);
     const [userData, setUserData] = useState({});
 
@@ -147,6 +217,7 @@ function RegistrationScreen() {
                     console.log("Account created")
                     const user = userCredential.user;
                     console.log(user)
+                    navigation.navigate('MenuPrincipal');
                 })
                 .catch(error => {
                     console.error("Error al crear la cuenta:", error);

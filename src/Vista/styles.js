@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export const sharedStyles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#E0E6F6',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -19,6 +18,7 @@ export const sharedStyles = StyleSheet.create({
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
+        color: '#000',
         marginBottom: 20,
         marginTop: 70,
         marginBottom: 30,

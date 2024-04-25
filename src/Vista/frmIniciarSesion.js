@@ -18,7 +18,7 @@ export default function PantallaIniciarSesion() {
           style={sharedStyles.iconoVolver}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={sharedStyles.boton}>
+      <TouchableOpacity style={sharedStyles.boton} onPress={() => navigation.navigate('IniciarSesion1')}>
         <Text style={sharedStyles.textoBoton}>Iniciar sesión con correo electrónico</Text>
       </TouchableOpacity>
       <TouchableOpacity style={sharedStyles.boton}>
