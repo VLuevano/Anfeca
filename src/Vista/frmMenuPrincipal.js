@@ -1,46 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { sharedStyles } from './styles';
+import BottomBar from './BottomBar'; // Importa el componente BottomBar
 
-const HomeScreen = () => {
-    const navigation = useNavigation();
-    const [user, setUser] = useState(null);
+const MenuPrincipal = () => {
+    const [username, setUsername] = useState('Usuario');
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // Inicializar Firebase Auth
-    const auth = getAuth();
-
-    useEffect(() => {
-        // Comprobar el estado de la autenticación cuando el componente se monta
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        // Desuscribirse del cambio de estado de autenticación al desmontar el componente
-        return () => unsubscribe();
-    }, []);
-
-    const handleLogoutAndNavigate = async () => {
-        try {
-            await signOut(auth);
-            setUser(null); // Actualiza el estado del usuario a null
-            // Redirige a la pantalla de inicio de sesión
-            navigation.navigate('IniciarSesion');
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
+    const handleSearch = () => {
+        // Lógica para buscar
+        console.log('Buscar:', searchQuery);
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            {user && (
-                <View>
-                    <Text style={{ fontSize: 24, marginBottom: 10 }}>¡Bienvenido, {user.displayName || 'Usuario'}!</Text>
-                    <Button title="Cerrar sesión" onPress={handleLogoutAndNavigate} />
-                </View>
-            )}
+        <View style={styles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <Text style={sharedStyles.titulo}>Bienvenido, {username}</Text>
+            {/* Espacio en medio */}
+            <View style={styles.space} />
+            {/* Agrega el componente BottomBar */}
+            <BottomBar />
         </View>
     );
-}
+};
 
-export default HomeScreen;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 40,
+        backgroundColor: '#E0E6F6',
+        justifyContent: 'space-between', // Alinea los elementos en el eje principal
+    },
+    space: {
+        flex: 1, // Ocupa el espacio disponible
+    },
+});
+
+export default MenuPrincipal;

@@ -6,6 +6,13 @@ export const sharedStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: 20,
+        flex: 1,
+    },
+    container2: {
+        backgroundColor: '#E0E6F6',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: 20,
     },
     espacioSuperior: {
         height: 60,
@@ -72,6 +79,15 @@ export const sharedStyles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 15,
         marginBottom: 10,
+        borderRadius: 10,
+    },
+    botonBarra: {
+        backgroundColor: '#FFABC5',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        marginBottom: 20,
         borderRadius: 10,
     },
 });

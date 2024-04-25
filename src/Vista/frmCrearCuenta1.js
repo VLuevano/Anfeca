@@ -41,7 +41,7 @@ function StepOne({ onNext }) {
     };
 
     return (
-        <View style={sharedStyles.container}>
+        <View style={sharedStyles.container2}>
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
@@ -86,7 +86,7 @@ function StepTwo({ onNext }) {
     };
 
     return (
-        <View style={sharedStyles.container}>
+        <View style={sharedStyles.container2}>
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
@@ -119,7 +119,7 @@ function StepThree({ onNext }) {
     };
 
     return (
-        <View style={sharedStyles.container}>
+        <View style={sharedStyles.container2}>
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
@@ -188,7 +188,7 @@ function StepFour({ onNext, onSelect }) {
     };
 
     return (
-        <View style={sharedStyles.container}>
+        <View style={sharedStyles.container2}>
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
