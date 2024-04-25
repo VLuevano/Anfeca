@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
 import { sharedStyles } from './styles';
 import { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
 import { Alert } from 'react-native';
@@ -27,7 +27,7 @@ function LoginScreen() {
                 navigation.navigate('MenuPrincipal');
             })
             .catch(error => {
-                Alert.alert(error.message)
+                Alert.alert("Ingrese datos válidos", error.message)
             })
     }
 
@@ -56,6 +56,11 @@ function LoginScreen() {
                 value={password}
                 secureTextEntry={true}
             />
+
+            <TouchableOpacity onPress={() => navigation.navigate('RecuperarContraseña')} style={[sharedStyles.botonTexto, { borderWidth: 0 }]}>
+                <Text style={[sharedStyles.textoBoton, { fontSize: 12 }]}>¿Olvidaste tu contraseña?</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={handleSignIn} style={sharedStyles.boton}>
                 <Text style={sharedStyles.textoBoton}>Iniciar Sesión</Text>
             </TouchableOpacity>

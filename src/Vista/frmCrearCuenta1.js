@@ -21,6 +21,22 @@ function StepOne({ onNext }) {
     const [password, setPassword] = useState('');
 
     const handleNext = () => {
+        if (email.trim() === '' || password.trim() === '') {
+            Alert.alert('Error', 'Por favor ingresa un correo electrónico y una contraseña.');
+            return;
+        }
+        // Validar que el correo electrónico sea válido
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            Alert.alert('Error', 'Por favor ingresa un correo electrónico válido.');
+            return;
+        }
+
+        // Validar que la contraseña tenga al menos 6 caracteres
+        if (password.length < 6) {
+            Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
+            return;
+        }
         onNext({ email, password });
     };
 
@@ -62,6 +78,10 @@ function StepTwo({ onNext }) {
     const [username, setUsername] = useState('');
 
     const handleNext = () => {
+        if (username.trim() === '') {
+            Alert.alert('Error', 'Por favor ingresa un nombre de usuario.');
+            return;
+        }
         onNext({ username });
     };
 
@@ -90,7 +110,7 @@ function StepTwo({ onNext }) {
 }
 
 function StepThree({ onNext }) {
-    
+
     const navigation = useNavigation();
     const [gender, setGender] = useState('');
 
@@ -144,6 +164,19 @@ function StepFour({ onNext, onSelect }) {
     };
 
     const handleNext = () => {
+        if (!selectedAvatar) {
+            Alert.alert('Error', 'Por favor selecciona un avatar.');
+            return;
+        }
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        const ageDifference = today.getFullYear() - birthDate.getFullYear();
+
+        // Si la diferencia de años es menor a 10, mostrar un mensaje de error
+        if (ageDifference < 10) {
+            Alert.alert('Error', 'Debes tener al menos 10 años para registrarte.');
+            return;
+        }
         onNext({ avatar, dateOfBirth });
     };
 
@@ -221,7 +254,6 @@ function RegistrationScreen() {
                 })
                 .catch(error => {
                     console.error("Error al crear la cuenta:", error);
-                    // Manejar el error de creación de cuenta
                 })
         }
     };

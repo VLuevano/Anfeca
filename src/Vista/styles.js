@@ -66,4 +66,12 @@ export const sharedStyles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 10, // Bordes redondeados
     },
+    botonTexto: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        marginBottom: 10,
+        borderRadius: 10,
+    },
 });

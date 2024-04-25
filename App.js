@@ -8,6 +8,7 @@ import IniciarSesion from './src/Vista/frmIniciarSesion';
 import CrearCuenta1 from './src/Vista/frmCrearCuenta1'; 
 import IniciarSesion1 from './src/Vista/frmIniciarSesion1'; 
 import MenuPrincipal from './src/Vista/frmMenuPrincipal'; 
+import RecuperarContraseña from './src/Vista/frmRecuperarContraseña'; 
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
         <Stack.Screen name="CrearCuenta1" component={CrearCuenta1}/>
         <Stack.Screen name="IniciarSesion1" component={IniciarSesion1}/>
         <Stack.Screen name="MenuPrincipal" component={MenuPrincipal}/>
+        <Stack.Screen name="RecuperarContraseña" component={RecuperarContraseña}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
