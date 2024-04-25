@@ -14,10 +14,10 @@ const ComponenteTema = ({ titulo, informacion }) => {
     <View style={styles.componenteTema}>
     <TouchableOpacity style={styles.temaContainer}>
       <View style={styles.textContainer}>
-        <Text style={styles.centroText}>Métodos</Text>
+        <Text style={styles.centroText}>{titulo}</Text>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.izquierdaText}>Enfermedades..... </Text>
+        <Text style={styles.izquierdaText}>{informacion} </Text>
       </View>
     </TouchableOpacity>
   </View>
@@ -35,6 +35,12 @@ export default function MenuPrincipalHome() {
         <Ionicons name="search" size={24} color="black" style={styles.icon} />
       </View>
       <Text style={styles.bienvenidoText}>Bienvenido Christian</Text>
+      <ComponenteTema titulo={"Metodos"} informacion={"Enfermedades...."}/>
+
+      <ComponenteTema titulo={"Metodos2"} informacion={"Enfermedades...."}/>
+
+      <ComponenteTema titulo={"Metodos3"} informacion={"Enfermedades...."}/>
+
 
 
     </View>
