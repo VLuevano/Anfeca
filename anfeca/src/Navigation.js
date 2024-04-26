@@ -12,6 +12,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 import IniciarSesionCorreo from "./screens/IniciarSesionCorreo";
 import ChatbotScreen from "./screens/ChatBotScreen";
 import CuentaScreen from "./screens/CuentaScreen";
+import OrganizacionScreen from "./screens/OrganizacionScreen";
 
 const Tab = createBottomTabNavigator();
 const colorHead = "#FFABC5"
@@ -40,7 +41,7 @@ function MyTabs() {
                 }}
             />
 
-            <Tab.Screen name="Organizaciones" component={SettingsScreen}
+            <Tab.Screen name="Organizaciones" component={OrganizacionScreen}
                 options={{
                     tabBarStyle: { backgroundColor: colorHead },
                     labelStyle: { backgroundColor: colorHead },
