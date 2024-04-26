@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import BottomBar from './BottomBar';
+import { sharedStyles } from './styles';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -7,10 +9,12 @@ const yellowP = "#F8DD6C"
 const backgroundP = "#E0E6F6"
 
 export default function CuentaScreen() {
+
     return (
         <View style={styles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
             <View style= {styles.perfil}>
-                <Text style={{paddingBottom: 15, fontSize: 24, fontWeight: "bold"}}>Perfil</Text>
+                <Text style={{paddingBottom: 10, fontSize: 24, fontWeight: "bold"}}>Perfil</Text>
                 <Image
                     source={require('../../Recursos/Imágenes/FotoPerfil.png')}
                     style={styles.fotoPerfil} 
@@ -45,6 +49,8 @@ export default function CuentaScreen() {
             <TouchableOpacity style={styles.confirmButton}>
                 <Text style={styles.confirmButtonText}>Confirmar Cambios</Text>
             </TouchableOpacity>
+
+            <BottomBar/>
         </View>
     );
 }
@@ -52,33 +58,32 @@ export default function CuentaScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: backgroundP,
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingTop: 40,
+        backgroundColor: '#E0E6F6',
+        justifyContent: 'space-between', // Alinea los elementos en el eje principal
     },
     items: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 20,
+        marginBottom: 10,
     },
     textInput: {
         flex: 1,
-        paddingLeft: 10,
         backgroundColor: greyP,
-        height: 32,
+        height: 24,
         borderRadius: 20,
     },
     label: {
         width: "30%",
-        marginRight: "5%",
-        fontSize: 16,
+        fontSize: 12,
     },
     confirmButton: {
         backgroundColor: yellowP,
         paddingVertical: 10,
-        paddingHorizontal: 20,
         borderRadius: 20,
         alignItems: 'center',
-        marginTop: 20,
+        marginBottom: 10,
     },
     confirmButtonText: {
         fontSize: 16,
@@ -86,14 +91,13 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     fotoPerfil: {
-
         width: 100,
         height: 100,
     },
     perfil: {
         alignContent: "center",
         alignItems: "center",
-        paddingBottom: "10%",
-
+        marginTop : 25,
     },
+    sharedStyles,
 });

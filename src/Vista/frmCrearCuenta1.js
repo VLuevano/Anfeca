@@ -10,6 +10,7 @@ import { Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { sharedStyles } from './styles';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -177,7 +178,7 @@ function StepFour({ onNext, onSelect }) {
             Alert.alert('Error', 'Debes tener al menos 10 años para registrarte.');
             return;
         }
-        onNext({ avatar, dateOfBirth });
+        onNext({ selectedAvatar, dateOfBirth });
     };
 
     const [selectedAvatar, setSelectedAvatar] = useState(null);
@@ -247,16 +248,35 @@ function RegistrationScreen() {
             // Crear la cuenta con toda la información ingresada
             createUserWithEmailAndPassword(auth, userData.email, userData.password, userData.username, userData.gender, userData.dateOfBirth)
                 .then((userCredential) => {
-                    console.log("Account created")
+                    console.log("Cuenta creada exitosamente");
                     const user = userCredential.user;
-                    console.log(user)
-                    navigation.navigate('MenuPrincipal');
+    
+                    // Guardar datos del usuario en Firestore
+                    const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
+    
+                    // Crea un documento en la colección "usuarios"
+                    addDoc(collection(db, 'usuarios'), {
+                        userId: user.uid, // Puedes usar el ID del usuario como clave
+                        email: userData.email,
+                        username: userData.username,
+                        gender: userData.gender,
+                        avatar: userData.avatar,
+                        dateOfBirth: userData.dateOfBirth,
+                    })
+                    .then(() => {
+                        console.log('Datos del usuario guardados en Firestore');
+                        navigation.navigate('MenuPrincipal');
+                    })
+                    .catch((error) => {
+                        console.error('Error al guardar datos del usuario en Firestore:', error);
+                    });
                 })
                 .catch(error => {
                     console.error("Error al crear la cuenta:", error);
-                })
+                });
         }
     };
+    
 
     return (
         <View>

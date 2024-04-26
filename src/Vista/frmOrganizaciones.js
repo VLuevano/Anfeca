@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Importa Ionicons desde tu biblioteca de iconos
-import { sharedStyles } from './styles';
+import { Ionicons } from "@expo/vector-icons";
 import BottomBar from './BottomBar';
+import { sharedStyles } from './styles';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -11,23 +11,34 @@ const purpleP = "#CDBFEA";
 const purpleContornoP = "#4D59A5";
 const backgroundP = "#FFF";
 
-const ComponenteTema = ({ titulo, informacion }) => {
+const ComponenteOrganizacion = ({ titulo, informacion }) => {
+    const [mostrarInfo, setMostrarInfo] = useState(false);
+
+    const toggleInfo = () => {
+        setMostrarInfo(!mostrarInfo);
+    };
+
     return (
+        
         <View style={styles.componenteTema}>
-            <TouchableOpacity style={styles.temaContainer}>
+            <TouchableOpacity style={styles.temaContainer} onPress={toggleInfo}>
                 <View style={styles.textContainer}>
                     <Text style={styles.centroText}>{titulo}</Text>
                 </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.izquierdaText}>{informacion} </Text>
-                </View>
+                <TouchableOpacity onPress={toggleInfo}>
+                    <Ionicons name={mostrarInfo ? "arrow-up-circle" : "arrow-down-circle"} size={24} color="black" style={styles.icon} />
+                </TouchableOpacity>
             </TouchableOpacity>
+            {mostrarInfo && (
+                <View style={styles.informacionContainer}>
+                    <Text style={styles.informacionText}>{informacion}</Text>
+                </View>
+            )}
         </View>
     );
-}; 
+};
 
-export default function MenuPrincipalHome() {
-
+export default function OrganizacionScreen() {
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
@@ -38,13 +49,9 @@ export default function MenuPrincipalHome() {
                 />
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
-            <Text style={styles.bienvenidoText}>Bienvenido Christian</Text>
-            <ComponenteTema titulo={"Metodos"} informacion={"Enfermedades...."} />
-
-            <ComponenteTema titulo={"Metodos2"} informacion={"Enfermedades...."} />
-
-            <ComponenteTema titulo={"Metodos3"} informacion={"Enfermedades...."} />
-
+            <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
+            <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} />
+            <ComponenteOrganizacion titulo={"IMSS"} informacion={"Informacaión..."} />
             <BottomBar />
         </View>
     );
@@ -65,9 +72,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         marginHorizontal: 20,
-        marginTop: 30,
         width: "85%",
         height: "5%",
+        marginTop : 60,
     },
     input: {
         flex: 1,
@@ -82,15 +89,13 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     temaContainer: {
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between", // Alinear los elementos a los lados
         padding: 10,
     },
     textContainer: {
-        width: "100%",
-    },
-    izquierdaText: {
-        textAlign: "left",
+        flex: 1,
     },
     centroText: {
         textAlign: "center",
@@ -100,6 +105,16 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         color: '#000',
+    },
+    informacionContainer: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        borderRadius: 10,
+        marginTop: 10,
+    },
+    informacionText: {
+        textAlign: "center",
     },
     sharedStyles,
 });

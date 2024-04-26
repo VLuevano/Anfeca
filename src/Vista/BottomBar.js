@@ -1,16 +1,17 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 const BottomBar = () => {
 
     const navigation = useNavigation();
 
     return (
         <View style={styles.bottomBar}>
-            <TouchableOpacity style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('MenuPrincipal')}>
                 <Text style={styles.optionText}>Menú</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Organizaciones')}>
                 <Text style={styles.optionText}>Organizaciones</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.option}>
@@ -34,7 +35,6 @@ const styles = StyleSheet.create({
     option: {
         backgroundColor: '#FFABC5',
         paddingVertical: 15,
-        paddingHorizontal: 30,
         borderRadius: 10,
     },
     optionText: {
