@@ -2,55 +2,82 @@ import React from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import BottomBar from './BottomBar';
 import { sharedStyles } from './styles';
+import { useState, useEffect } from 'react';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../../firebase-config';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
 const yellowP = "#F8DD6C"
 const backgroundP = "#E0E6F6"
 
+const app = initializeApp(firebaseConfig);
+
 export default function CuentaScreen() {
+
+    const db = getFirestore(app);
+
+    const [username, setNombreUsuario] = useState('');
+    const [email, setCorreo] = useState('');
+    const [gender, setSexo] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
+            const userDocSnap = await getDoc(userDoc);
+    
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
+                setNombreUsuario(userData.username);
+                setCorreo(userData.email);
+                setSexo(userData.gender);
+                setDateOfBirth(userData.dateOfBirth);
+            }
+        };
+    
+        fetchUserData();
+    }, []);
 
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
-            <View style= {styles.perfil}>
-                <Text style={{paddingBottom: 10, fontSize: 24, fontWeight: "bold"}}>Perfil</Text>
+            <View style={styles.perfil}>
+                <Text style={{ paddingBottom: 10, fontSize: 24, fontWeight: "bold" }}>Perfil</Text>
                 <Image
                     source={require('../../Recursos/Imágenes/FotoPerfil.png')}
-                    style={styles.fotoPerfil} 
+                    style={styles.fotoPerfil}
                 />
             </View>
 
             <View style={styles.items}>
-                <Text style={styles.label}>Nombre:</Text>
-                <TextInput style={styles.textInput} />
+                <Text style={styles.label}>Nombre de usuario:</Text>
+                <Text style={styles.textInput}>{username}</Text>
             </View>
 
             <View style={styles.items}>
-                <Text style={styles.label}>Apellidos:</Text>
-                <TextInput style={styles.textInput} />
-            </View>
-
-            <View style={styles.items}>
-                <Text style={styles.label}>Correo:</Text>
-                <TextInput style={styles.textInput} />
+                <Text style={styles.label}>Correo electrónico:</Text>
+                <Text style={styles.textInput}>{email}</Text>
             </View>
 
             <View style={styles.items}>
                 <Text style={styles.label}>Sexo:</Text>
-                <TextInput style={styles.textInput} />
+                <Text style={styles.textInput}>{gender}</Text>
             </View>
 
             <View style={styles.items}>
-                <Text style={styles.label}>Contraseña:</Text>
-                <TextInput style={styles.textInput} />
+                <Text style={styles.label}>Fecha de nacimiento:</Text>
+                <Text style={styles.textInput}>{dateOfBirth}</Text>
             </View>
 
             <TouchableOpacity style={styles.confirmButton}>
                 <Text style={styles.confirmButtonText}>Confirmar Cambios</Text>
             </TouchableOpacity>
 
-            <BottomBar/>
+            <BottomBar />
         </View>
     );
 }
@@ -97,7 +124,7 @@ const styles = StyleSheet.create({
     perfil: {
         alignContent: "center",
         alignItems: "center",
-        marginTop : 25,
+        marginTop: 25,
     },
     sharedStyles,
 });

@@ -10,7 +10,7 @@ import IniciarSesion1 from './src/Vista/frmIniciarSesion1';
 import MenuPrincipal from './src/Vista/frmMenuPrincipal'; 
 import RecuperarContraseña from './src/Vista/frmRecuperarContraseña'; 
 import Cuenta from './src/Vista/frmCuentaUsuario'; 
-import Organizaciones from './src/Vista/frmOrganizaciones'; 
+import Organizaciones from './src/Vista/frmOrganizaciones';
 
 const Stack = createStackNavigator();
 

@@ -35,7 +35,7 @@ function LoginScreen() {
         <View style={sharedStyles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
             <Text style={sharedStyles.titulo}>Iniciar Sesión</Text>
-            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('IniciarSesion')}>
                 <Image
                     source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}

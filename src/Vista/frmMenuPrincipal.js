@@ -3,6 +3,11 @@ import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-nativ
 import { Ionicons } from "@expo/vector-icons"; // Importa Ionicons desde tu biblioteca de iconos
 import { sharedStyles } from './styles';
 import BottomBar from './BottomBar';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../../firebase-config';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -10,6 +15,8 @@ const yellowP = "#F8DD6C";
 const purpleP = "#CDBFEA";
 const purpleContornoP = "#4D59A5";
 const backgroundP = "#FFF";
+
+const app = initializeApp(firebaseConfig);
 
 const ComponenteTema = ({ titulo, informacion }) => {
     return (
@@ -24,9 +31,28 @@ const ComponenteTema = ({ titulo, informacion }) => {
             </TouchableOpacity>
         </View>
     );
-}; 
+};
 
 export default function MenuPrincipalHome() {
+
+    const db = getFirestore(app);
+
+    const [userName, setNombreUsuario] = useState('');
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
+            const userDocSnap = await getDoc(userDoc);
+    
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
+                setNombreUsuario(userData.username);
+            }
+        };
+    
+        fetchUserData();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -38,7 +64,7 @@ export default function MenuPrincipalHome() {
                 />
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
-            <Text style={styles.bienvenidoText}>Bienvenido Christian</Text>
+            <Text style={styles.bienvenidoText}>Bienvenido {userName}</Text>
             <ComponenteTema titulo={"Metodos"} informacion={"Enfermedades...."} />
 
             <ComponenteTema titulo={"Metodos2"} informacion={"Enfermedades...."} />

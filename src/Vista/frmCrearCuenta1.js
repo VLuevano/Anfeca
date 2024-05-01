@@ -11,6 +11,9 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { sharedStyles } from './styles';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { setDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -113,7 +116,7 @@ function StepTwo({ onNext }) {
 function StepThree({ onNext }) {
 
     const navigation = useNavigation();
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState('Hombre');
 
     const handleNext = () => {
         onNext({ gender });
@@ -135,8 +138,8 @@ function StepThree({ onNext }) {
                 onValueChange={(itemValue) => setGender(itemValue)}
                 style={sharedStyles.entradaTexto}
             >
-                <Picker.Item label="Masculino" value="male" />
-                <Picker.Item label="Femenino" value="female" />
+                <Picker.Item label="Hombre" value="Hombre" />
+                <Picker.Item label="Mujer" value="Mujer" />
             </Picker>
             <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
                 <Text style={sharedStyles.textoBoton}>Continuar</Text>
@@ -172,13 +175,15 @@ function StepFour({ onNext, onSelect }) {
         const today = new Date();
         const birthDate = new Date(dateOfBirth);
         const ageDifference = today.getFullYear() - birthDate.getFullYear();
-
+    
         // Si la diferencia de años es menor a 10, mostrar un mensaje de error
         if (ageDifference < 10) {
             Alert.alert('Error', 'Debes tener al menos 10 años para registrarte.');
             return;
         }
-        onNext({ selectedAvatar, dateOfBirth });
+        // Formatear la fecha de nacimiento a una cadena de texto en el formato "yyyy-mm-dd"
+        const dateOfBirthString = `${birthDate.getFullYear()}-${birthDate.getMonth() + 1}-${birthDate.getDate()}`;
+        onNext({ selectedAvatar, dateOfBirth: dateOfBirthString });
     };
 
     const [selectedAvatar, setSelectedAvatar] = useState(null);
@@ -241,27 +246,29 @@ function RegistrationScreen() {
     const [userData, setUserData] = useState({});
 
     const handleNext = (data) => {
-        setUserData({ ...userData, ...data });
+        const newUserData = { ...userData, ...data };
+        console.log('Datos recibidos en handleNext:', newUserData); // Añade esta línea
+        setUserData(newUserData);
         if (step < 4) {
             setStep(step + 1);
         } else {
-            // Crear la cuenta con toda la información ingresada
-            createUserWithEmailAndPassword(auth, userData.email, userData.password, userData.username, userData.gender, userData.dateOfBirth)
+            console.log('Datos de newUserData antes de guardar en Firestore:', newUserData); // Añade esta línea
+            // Crear la cuenta con el correo electrónico y la contraseña
+            createUserWithEmailAndPassword(auth, newUserData.email, newUserData.password)
                 .then((userCredential) => {
                     console.log("Cuenta creada exitosamente");
                     const user = userCredential.user;
     
-                    // Guardar datos del usuario en Firestore
+                    // Guardar datos adicionales del usuario en Firestore
                     const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
     
                     // Crea un documento en la colección "usuarios"
-                    addDoc(collection(db, 'usuarios'), {
+                    setDoc(doc(db, 'Usuario', user.uid), {
                         userId: user.uid, // Puedes usar el ID del usuario como clave
-                        email: userData.email,
-                        username: userData.username,
-                        gender: userData.gender,
-                        avatar: userData.avatar,
-                        dateOfBirth: userData.dateOfBirth,
+                        email: newUserData.email,
+                        username: newUserData.username,
+                        gender: newUserData.gender,
+                        dateOfBirth: newUserData.dateOfBirth, // Guardar la fecha de nacimiento como una cadena de texto
                     })
                     .then(() => {
                         console.log('Datos del usuario guardados en Firestore');
@@ -277,7 +284,6 @@ function RegistrationScreen() {
         }
     };
     
-
     return (
         <View>
             {step === 1 && <StepOne onNext={handleNext} />}
@@ -287,6 +293,7 @@ function RegistrationScreen() {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     sharedStyles,
 });
