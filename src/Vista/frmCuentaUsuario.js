@@ -7,6 +7,10 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
+import { updateProfile } from "firebase/auth";
+import { setDoc } from "firebase/firestore";
+import { updateEmail } from "firebase/auth";
+import { Alert } from 'react-native';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -23,6 +27,7 @@ export default function CuentaScreen() {
     const [email, setCorreo] = useState('');
     const [gender, setSexo] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -42,6 +47,42 @@ export default function CuentaScreen() {
         fetchUserData();
     }, []);
 
+    const handleConfirmChanges = async () => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+    
+        if (user) {
+            try {
+                // Intenta actualizar el correo electrónico
+                await updateEmail(user, email);
+
+                // Si la actualización fue exitosa, actualiza el perfil y los datos en Firestore
+                await updateProfile(user, {
+                    displayName: username,
+                    email: email,
+                });
+
+                const userDoc = doc(db, 'Usuario', user.uid);
+                await setDoc(userDoc, {
+                    username: username,
+                    email: email,
+                    gender: gender,
+                    dateOfBirth: dateOfBirth,
+                }, { merge: true });
+
+                // Si todo fue exitoso, establece un mensaje de éxito
+                setMessage('Los cambios se han guardado con éxito.');
+
+            } catch (error) {
+                // Si hubo un error, establece un mensaje de error
+                setMessage('Hubo un error al guardar los cambios: ' + error.message);
+            }
+
+            // Muestra una alerta con el mensaje
+            Alert.alert(message);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
@@ -55,12 +96,19 @@ export default function CuentaScreen() {
 
             <View style={styles.items}>
                 <Text style={styles.label}>Nombre de usuario:</Text>
-                <Text style={styles.textInput}>{username}</Text>
+                <TextInput
+                    style={styles.textInput}
+                    value={username}
+                    onChangeText={setNombreUsuario}
+                />
             </View>
-
             <View style={styles.items}>
                 <Text style={styles.label}>Correo electrónico:</Text>
-                <Text style={styles.textInput}>{email}</Text>
+                <TextInput
+                    style={styles.textInput}
+                    value={email}
+                    onChangeText={setCorreo}
+                />
             </View>
 
             <View style={styles.items}>
@@ -73,7 +121,7 @@ export default function CuentaScreen() {
                 <Text style={styles.textInput}>{dateOfBirth}</Text>
             </View>
 
-            <TouchableOpacity style={styles.confirmButton}>
+            <TouchableOpacity onPress={handleConfirmChanges} style={styles.confirmButton}>
                 <Text style={styles.confirmButtonText}>Confirmar Cambios</Text>
             </TouchableOpacity>
 
