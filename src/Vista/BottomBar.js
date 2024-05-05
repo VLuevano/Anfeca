@@ -14,7 +14,7 @@ const BottomBar = () => {
             <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Organizaciones')}>
                 <Text style={styles.optionText}>Organizaciones</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Chatbot')}>
                 <Text style={styles.optionText}>Chatbot</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Cuenta')}>

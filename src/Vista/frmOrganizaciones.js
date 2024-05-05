@@ -60,7 +60,6 @@ export default function OrganizacionScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
         justifyContent: 'space-between', // Alinea los elementos en el eje principal

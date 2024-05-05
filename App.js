@@ -11,6 +11,7 @@ import MenuPrincipal from './src/Vista/frmMenuPrincipal';
 import RecuperarContraseña from './src/Vista/frmRecuperarContraseña'; 
 import Cuenta from './src/Vista/frmCuentaUsuario'; 
 import Organizaciones from './src/Vista/frmOrganizaciones';
+import Chatbot from './src/Vista/frmChatbot';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="RecuperarContraseña" component={RecuperarContraseña}/>
         <Stack.Screen name="Cuenta" component={Cuenta}/>
         <Stack.Screen name="Organizaciones" component={Organizaciones}/>
+        <Stack.Screen name="Chatbot" component={Chatbot}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

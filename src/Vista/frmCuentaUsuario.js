@@ -133,7 +133,6 @@ export default function CuentaScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
         justifyContent: 'space-between', // Alinea los elementos en el eje principal
@@ -148,10 +147,12 @@ const styles = StyleSheet.create({
         backgroundColor: greyP,
         height: 24,
         borderRadius: 20,
+        marginRight : 20,
     },
     label: {
         width: "30%",
         fontSize: 12,
+        marginLeft : 20,
     },
     confirmButton: {
         backgroundColor: yellowP,
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         marginBottom: 10,
+        marginHorizontal: 40,
     },
     confirmButtonText: {
         fontSize: 16,
