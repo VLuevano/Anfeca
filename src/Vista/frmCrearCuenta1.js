@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
@@ -11,9 +11,9 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { sharedStyles } from './styles';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { Timestamp } from 'firebase/firestore';
 import { setDoc } from 'firebase/firestore';
 import { doc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -151,21 +151,40 @@ function StepThree({ onNext }) {
 function StepFour({ onNext, onSelect }) {
 
     const navigation = useNavigation();
-    const [avatar, setAvatar] = useState('');
+    const [avatars, setAvatars] = useState([]);
     const [dateOfBirth, setDateOfBirth] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const avatars = [
-        { id: 1, image: require('../../Recursos/Imágenes/avatar1.jpg') },
-        { id: 2, image: require('../../Recursos/Imágenes/avatar2.jpeg') },
-        { id: 3, image: require('../../Recursos/Imágenes/avatar3.jpg') },
+    const avatarPaths = [
+        '47207d84-logo-simi-e1667606405832.png',
+        'OIP.jpeg',
+        'hqdefault.jpg',
     ];
+
+    const storage = getStorage();
 
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || dateOfBirth;
         setShowDatePicker(false);
         setDateOfBirth(currentDate);
     };
+
+    useEffect(() => {
+        // Obtener las URLs de descarga de los avatares
+        Promise.all(avatarPaths.map((path, index) => {
+            const storageRef = ref(storage, 'avatars/' + path);
+            return getDownloadURL(storageRef)
+                .then((url) => {
+                    // Crear un objeto avatar con la URL de descarga
+                    return {
+                        id: index + 1,
+                        image: url,
+                    };
+                });
+        })).then((newAvatars) => {
+            setAvatars(newAvatars);
+        });
+    }, []);
 
     const handleNext = () => {
         if (!selectedAvatar) {
@@ -175,7 +194,7 @@ function StepFour({ onNext, onSelect }) {
         const today = new Date();
         const birthDate = new Date(dateOfBirth);
         const ageDifference = today.getFullYear() - birthDate.getFullYear();
-    
+
         // Si la diferencia de años es menor a 10, mostrar un mensaje de error
         if (ageDifference < 10) {
             Alert.alert('Error', 'Debes tener al menos 10 años para registrarte.');
@@ -209,11 +228,12 @@ function StepFour({ onNext, onSelect }) {
                 horizontal
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handleAvatarPress(item)} style={{ margin: 5 }}>
-                        <Image source={item.image} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                        <Image source={{ uri: item.image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
                     </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.id.toString()}
             />
+
             {selectedAvatar && (
                 <Text>Avatar seleccionado: {selectedAvatar.id}</Text>
             )}
@@ -258,10 +278,10 @@ function RegistrationScreen() {
                 .then((userCredential) => {
                     console.log("Cuenta creada exitosamente");
                     const user = userCredential.user;
-    
+
                     // Guardar datos adicionales del usuario en Firestore
                     const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
-    
+
                     // Crea un documento en la colección "usuarios"
                     setDoc(doc(db, 'Usuario', user.uid), {
                         userId: user.uid, // Puedes usar el ID del usuario como clave
@@ -269,21 +289,23 @@ function RegistrationScreen() {
                         username: newUserData.username,
                         gender: newUserData.gender,
                         dateOfBirth: newUserData.dateOfBirth, // Guardar la fecha de nacimiento como una cadena de texto
+                        avatar: newUserData.selectedAvatar, // Guardar el avatar seleccionado
                     })
-                    .then(() => {
-                        console.log('Datos del usuario guardados en Firestore');
-                        navigation.navigate('MenuPrincipal');
-                    })
-                    .catch((error) => {
-                        console.error('Error al guardar datos del usuario en Firestore:', error);
-                    });
+                        .then(() => {
+                            console.log('Datos del usuario guardados en Firestore');
+                            navigation.navigate('MenuPrincipal');
+                        })
+                        .catch((error) => {
+                            console.error('Error al guardar datos del usuario en Firestore:', error);
+                        });
                 })
                 .catch(error => {
                     console.error("Error al crear la cuenta:", error);
                 });
+
         }
     };
-    
+
     return (
         <View>
             {step === 1 && <StepOne onNext={handleNext} />}

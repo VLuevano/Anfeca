@@ -28,12 +28,13 @@ export default function CuentaScreen() {
     const [gender, setSexo] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [message, setMessage] = useState('');
+    const [avatarUrl, setAvatarUrl] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
             const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
             const userDocSnap = await getDoc(userDoc);
-    
+
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
                 console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
@@ -41,16 +42,18 @@ export default function CuentaScreen() {
                 setCorreo(userData.email);
                 setSexo(userData.gender);
                 setDateOfBirth(userData.dateOfBirth);
+                setAvatarUrl(userData.avatar.image); // Recuperar la URL de la imagen del avatar
             }
         };
-    
+
         fetchUserData();
     }, []);
+
 
     const handleConfirmChanges = async () => {
         const auth = getAuth();
         const user = auth.currentUser;
-    
+
         if (user) {
             try {
                 // Intenta actualizar el correo electrónico
@@ -88,11 +91,16 @@ export default function CuentaScreen() {
             <View style={sharedStyles.espacioSuperior}></View>
             <View style={styles.perfil}>
                 <Text style={{ paddingBottom: 10, fontSize: 24, fontWeight: "bold" }}>Perfil</Text>
-                <Image
-                    source={require('../../Recursos/Imágenes/FotoPerfil.png')}
-                    style={styles.fotoPerfil}
-                />
+                {avatarUrl ? (
+                    <Image
+                        source={{ uri: avatarUrl }} // Usar la URL del avatar para mostrar la imagen
+                        style={styles.fotoPerfil}
+                    />
+                ) : (
+                    <Text>Cargando avatar...</Text> // Mostrar un mensaje de carga mientras la URL del avatar se está cargando
+                )}
             </View>
+
 
             <View style={styles.items}>
                 <Text style={styles.label}>Nombre de usuario:</Text>
@@ -147,12 +155,12 @@ const styles = StyleSheet.create({
         backgroundColor: greyP,
         height: 24,
         borderRadius: 20,
-        marginRight : 20,
+        marginRight: 20,
     },
     label: {
         width: "30%",
         fontSize: 12,
-        marginLeft : 20,
+        marginLeft: 20,
     },
     confirmButton: {
         backgroundColor: yellowP,
