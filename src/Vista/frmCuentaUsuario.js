@@ -11,6 +11,8 @@ import { updateProfile } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
 import { updateEmail } from "firebase/auth";
 import { Alert } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -29,6 +31,8 @@ export default function CuentaScreen() {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [message, setMessage] = useState('');
     const [avatarUrl, setAvatarUrl] = useState('');
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -49,6 +53,15 @@ export default function CuentaScreen() {
         fetchUserData();
     }, []);
 
+    const handleSignOut = async () => {
+        const auth = getAuth();
+        try {
+            await signOut(auth);
+            navigation.navigate('Inicio');
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+        }
+    };
 
     const handleConfirmChanges = async () => {
         const auth = getAuth();
@@ -91,6 +104,9 @@ export default function CuentaScreen() {
             <View style={sharedStyles.espacioSuperior}></View>
             <View style={styles.perfil}>
                 <Text style={{ paddingBottom: 10, fontSize: 24, fontWeight: "bold" }}>Perfil</Text>
+                <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
+                    <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+                </TouchableOpacity>
                 {avatarUrl ? (
                     <Image
                         source={{ uri: avatarUrl }} // Usar la URL del avatar para mostrar la imagen
@@ -156,6 +172,7 @@ const styles = StyleSheet.create({
         height: 24,
         borderRadius: 20,
         marginRight: 20,
+        marginLeft: 20,
     },
     label: {
         width: "30%",
@@ -183,6 +200,15 @@ const styles = StyleSheet.create({
         alignContent: "center",
         alignItems: "center",
         marginTop: 25,
+    },
+    logoutButton: {
+        position: 'absolute', // Posiciona el botón de cierre de sesión de manera absoluta
+        top: 0, // Alinea el botón con la parte superior de la vista
+        right: 0, // Alinea el botón con el lado derecho de la vista
+        padding: 10, // Agrega un poco de relleno alrededor del botón
+    },
+    logoutButtonText: {
+        color: 'red', // Puedes cambiar esto al color que prefieras
     },
     sharedStyles,
 });
