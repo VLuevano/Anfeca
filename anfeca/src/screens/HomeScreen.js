@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import HomeInformacion from "./HomeScreenInformacion";
 import info from "./HomeScreenInformacion";
 import { navigate } from "../Navigation";
-import Navigation from "../Navigation";
+
 
 
 
@@ -45,9 +45,8 @@ const ComponenteTema = ({ titulo, informacion }) => {
   const navigation = useNavigation();
 
   const handleJugarPress = () => {
-    toggleModal();
-    navigate('PantallaA');
- // Navega a la pantalla PantallaA al presionar el botón "Jugar"
+    toggleModal(); // Cierra el modal antes de navegar a la pantalla
+    navigation.navigate('info'); // Navega a la pantalla info
   };
 
 
@@ -85,28 +84,27 @@ const ComponenteTema = ({ titulo, informacion }) => {
 
 
 
-            <View  >
+            <View style={styles.buttonOpcionContainer} >
 
-              <View style={styles.buttonOpcion}>
-                <TouchableOpacity onPress={() => navigate('PantallaA')}>
-                  <Text style={{ color: 'white' }}>Jugar</Text>
-                </TouchableOpacity>
-
-              </View>
-
-              <View style={styles.buttonOpcion}>
-                <TouchableOpacity>
-                  <Button title="Historial" onPress={toggleModal} />
+              <View >
+                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                  <Text style={{marginTop: 5}}>Jugar</Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.buttonOpcion}>
-                <TouchableOpacity>
-                  <Button title="Resumen" onPress={toggleModal} />
+              <View >
+                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                  <Text style={{marginTop: 5}}>Historial</Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={{ backgroundColor: yellowP, borderRadius: 20, marginTop: "20%" }}>
+              <View >
+                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                  <Text style={{marginTop: 5}} >Resumen</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ backgroundColor: yellowP, borderRadius: 20, marginTop: "40%" }}>
                 <TouchableOpacity>
                   <Button title="Cerrar" onPress={toggleModal} />
                 </TouchableOpacity>
@@ -208,16 +206,22 @@ const styles = StyleSheet.create({
   },
   buttonOpcion: {
     backgroundColor: purpleP,
-    borderRadius: 20,
+    borderRadius: 50,
+    alignItems: "center",
+    width: 250,
+    height: 30,
     marginBottom: 20,
   },
+
+
   modalTitle: {
     fontSize: 24,
-    marginBottom: 20,
     padding: 30,
-    alignItems: "center"
+    alignItems: "center",
+    
   },
   modalTitleText: {
+    marginBottom: "10%",
     fontSize: 20, // Ajusta el tamaño del texto aquí
   }
 });

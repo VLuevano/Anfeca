@@ -16,9 +16,9 @@ import IniciarSesionCorreo from "./screens/IniciarSesionCorreo";
 import ChatbotScreen from "./screens/ChatBotScreen";
 import CuentaScreen from "./screens/CuentaScreen";
 import OrganizacionScreen from "./screens/OrganizacionScreen";
-import HomeInformacion from "./screens/HomeScreenInformacion";
-import Infoo from "./screens/HomeScreenInformacion";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Infoo from "./screens/HomeScreenInformacion";
+import Quizz from "./screens/QuizzScreen";
 
 
 
@@ -39,24 +39,26 @@ export function navigate(name, params) {
 
 const HomeStackNavigator = createNativeStackNavigator();
 
+
+
 function MyStack() {
     return (
-        <HomeStackNavigator.Navigator>
-            <HomeStackNavigator.Screen
-                name="HomeScreen"
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Home"
                 component={HomeScreen}
             />
-
-
-            <HomeStackNavigator.Screen
-                name="PantallaA"
-                component={PantallaA}
+            <Stack.Screen
+                name="info"  // Agregar la pantalla 'info' aquí
+                component={Infoo}  // Componente asociado a la pantalla 'info'
             />
 
-
-
-        </HomeStackNavigator.Navigator>
-    )
+            <Stack.Screen
+                name="quizz"  // Agregar la pantalla 'info' aquí
+                component={Quizz}  // Componente asociado a la pantalla 'info'
+            />
+        </Stack.Navigator>
+    );
 }
 
 function MyTabs() {
@@ -121,6 +123,8 @@ function MyTabs() {
                             style={{ width: size, height: size, tintColor: color }}
                         />
                     ),
+
+
                 }} />
 
 
@@ -137,11 +141,12 @@ function MyTabs() {
 
 
 
-export default function Navigation() {
+export default function AppNavigation() {
     return (
         <NavigationContainer>
             <MyTabs />
 
+            <Stack.Screen name="info" component={Infoo} />
 
         </NavigationContainer>
     );
