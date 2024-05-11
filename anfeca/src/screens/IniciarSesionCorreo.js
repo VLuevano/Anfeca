@@ -3,10 +3,6 @@ import { StyleSheet, Image, Text, View, TouchableOpacity, TextInput, handlePress
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
-
-
-
-
 export default function IniciarSesionCorreo() {
     const handleForgotPassword = () => {
         console.log("¿Olvidaste tu contraseña? clickeado");

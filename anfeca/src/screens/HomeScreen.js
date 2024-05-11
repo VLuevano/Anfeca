@@ -10,6 +10,7 @@ import { navigate } from "../Navigation";
 
 
 
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -48,6 +49,10 @@ const ComponenteTema = ({ titulo, informacion }) => {
     toggleModal(); // Cierra el modal antes de navegar a la pantalla
     navigation.navigate('info'); // Navega a la pantalla info
   };
+
+  const handleSalirPress = () => {
+    navigate('Home'); // Navega a la pantalla 'Home' cuando se hace clic en el botón "Salir"
+};
 
 
 

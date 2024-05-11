@@ -5,8 +5,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { Image } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
 
-import PantallaA from "./screens/PantallaA";
-import PantallaB from "./screens/PantallaB";
+
+
 import MenuPrincipalHome from "./screens/HomeScreen";
 
 
@@ -143,7 +143,7 @@ function MyTabs() {
 
 export default function AppNavigation() {
     return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
             <MyTabs />
 
             <Stack.Screen name="info" component={Infoo} />

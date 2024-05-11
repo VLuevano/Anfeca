@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Linking } from 'react-native';
+
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -29,6 +31,10 @@ const ComponenteOrganizacion = ({ titulo, informacion }) => {
             {mostrarInfo && (
                 <View style={styles.informacionContainer}>
                     <Text style={styles.informacionText}>{informacion}</Text>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://www.amssac.org')}>
+    <Text style={{ textAlign: "center", marginTop: 10, color: purpleContornoP, fontWeight: 'bold', fontSize: 17 }}>Más información</Text>
+</TouchableOpacity>
+
                 </View>
             )}
         </View>

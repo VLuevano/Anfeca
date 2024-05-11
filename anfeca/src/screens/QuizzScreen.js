@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { Button } from "react-native-paper";
+import { navigate } from "../Navigation";
 
 const Quizz = () => {
     const [contador, setContador] = useState(10);
@@ -12,6 +14,10 @@ const Quizz = () => {
     const [preguntaActual, setPreguntaActual] = useState(0);
     const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
     const [respuestaCorrectaAnimada, setRespuestaCorrectaAnimada] = useState(new Animated.Value(0));
+    const [respuestasCorrectas, setRespuestasCorrectas] = useState(0);
+    const [mostrarResultados, setMostrarResultados] = useState(false);
+    const [respuestasElegidas, setRespuestasElegidas] = useState([]);
+    const [totalPreguntas, setTotalPreguntas] = useState(preguntas.length);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -25,23 +31,35 @@ const Quizz = () => {
         return () => clearInterval(interval);
     }, [contador]);
 
+    useEffect(() => {
+        // Reiniciar el contador cuando se muestren los resultados
+        setContador(10);
+    }, [mostrarResultados]);
+
     const avanzarPregunta = () => {
         if (preguntaActual < preguntas.length - 1) {
             setPreguntaActual((prevPreguntaActual) => prevPreguntaActual + 1);
             setPregunta(preguntas[preguntaActual + 1].pregunta);
             setContador(10);
             setRespuestaSeleccionada(null); // Reiniciamos la respuesta seleccionada
+            setRespuestaCorrectaAnimada(new Animated.Value(0)); // Reiniciamos la animación de respuesta correcta
         } else {
-            // Si ya no hay más preguntas, mostrar un mensaje o realizar alguna acción
-            console.log("¡Fin del quizz!");
+            // Si ya no hay más preguntas, mostrar la pantalla de resultados
+            setMostrarResultados(true);
         }
     };
 
     const handleOpcionSeleccionada = (opcion) => {
         setRespuestaSeleccionada(opcion);
 
+        // Almacenar la respuesta elegida
+        setRespuestasElegidas([...respuestasElegidas, opcion]);
+
         // Verificar si la respuesta seleccionada es correcta
         if (opcion === preguntas[preguntaActual].respuestaCorrecta) {
+            // Incrementar el contador de respuestas correctas
+            setRespuestasCorrectas((prevRespuestasCorrectas) => prevRespuestasCorrectas + 1);
+
             // Aplicar un efecto visual para indicar la respuesta correcta
             Animated.timing(respuestaCorrectaAnimada, {
                 toValue: 1,
@@ -50,45 +68,88 @@ const Quizz = () => {
             }).start();
 
             // Avanzar a la siguiente pregunta
-            setTimeout(avanzarPregunta, 1500); // Avanzar después de 1.5 segundos
+            setTimeout(avanzarPregunta, 500); // Avanzar después de 0.5 segundos
+        } else {
+            // Si la respuesta es incorrecta, mostrar la respuesta correcta después de un tiempo
+            setTimeout(() => {
+                Animated.timing(respuestaCorrectaAnimada, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true
+                }).start();
+                avanzarPregunta();
+            }, 1000); // Mostrar la respuesta correcta después de 1 segundo
         }
     };
 
     return (
         <View>
-            <View style={styles.container}>
-                <Text style={styles.title}>{pregunta}</Text>
-                <Text style={styles.counter}>Tiempo restante: {contador} s</Text>
-            </View>
+            {!mostrarResultados ? (
+                <View>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>{pregunta}</Text>
+                        <Text style={styles.counter}>Tiempo restante: {contador} s</Text>
+                    </View>
 
-            {preguntas[preguntaActual].opciones.map((opcion, index) => (
-                <TouchableOpacity
-                    key={index}
-                    onPress={() => handleOpcionSeleccionada(opcion)}
-                    style={[
-                        styles.optionButton,
-                        opcion === preguntas[preguntaActual].respuestaCorrecta && respuestaSeleccionada === opcion && { backgroundColor: "green" }
-                    ]}
-                >
-                    <Text>{opcion}</Text>
-                </TouchableOpacity>
-            ))}
+                    {preguntas[preguntaActual].opciones.map((opcion, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            onPress={() => handleOpcionSeleccionada(opcion)}
+                            style={[
+                                styles.optionButton,
+                                respuestaSeleccionada === opcion && opcion === preguntas[preguntaActual].respuestaCorrecta && { backgroundColor: "green" },
+                                respuestaSeleccionada === opcion && opcion !== preguntas[preguntaActual].respuestaCorrecta && { backgroundColor: "red" }
+                            ]}
+                            disabled={respuestaSeleccionada !== null}
+                        >
+                            <Text>{opcion}</Text>
+                            {respuestaSeleccionada && (
+                                <Text style={{ fontWeight: "bold" }}>
+                                    {opcion === preguntas[preguntaActual].respuestaCorrecta ? "(Correcta)" : "(Incorrecta)"}
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                    ))}
 
-            {/* Efecto visual para la respuesta correcta */}
-            {respuestaSeleccionada === preguntas[preguntaActual].respuestaCorrecta && (
-                <Animated.View
-                    style={[
-                        styles.correctIndicator,
-                        {
-                            opacity: respuestaCorrectaAnimada.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [0, 1]
-                            })
-                        }
-                    ]}
-                >
-                    <Text style={styles.correctText}>¡Correcto!</Text>
-                </Animated.View>
+                    {/* Mostrar la opción seleccionada */}
+                    {respuestaSeleccionada && (
+                        <View style={[styles.respuestaSeleccionadaContainer, { backgroundColor: respuestaSeleccionada === preguntas[preguntaActual].respuestaCorrecta ? "green" : "red" }]}>
+                            <Text style={styles.respuestaSeleccionadaText}>Tu respuesta: {respuestaSeleccionada}</Text>
+                        </View>
+                    )}
+
+                    {/* Efecto visual para la respuesta correcta */}
+                    {respuestaCorrectaAnimada === 1 && (
+                        <Animated.View style={[styles.correctIndicator, { backgroundColor: "green" }]}>
+                            <Text style={styles.correctText}>La respuesta correcta es: {preguntas[preguntaActual].respuestaCorrecta}</Text>
+                        </Animated.View>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.resultadosContainer}>
+                    <Text style={styles.resultadosTitle}>Resultados del Quizz</Text>
+                    <Text style={styles.resultadosText}>Puntuacion final</Text>
+                    <Text style={styles.resultadosText}>Puntuación: {respuestasCorrectas}/{totalPreguntas}</Text>
+
+                    {/* Botón "Jugar otra vez" */}
+                    <TouchableOpacity onPress={() => {
+                        // Reiniciar el estado para jugar otra vez
+                        setRespuestasCorrectas(0);
+                        setPreguntaActual(0);
+                        setRespuestaSeleccionada(null);
+                        setMostrarResultados(false);
+                        setRespuestasElegidas([]);
+                    }}>
+                        <Button style={styles.button}>Jugar otra vez</Button>
+                    </TouchableOpacity>
+
+                    {/* Botón "Salir" */}
+                    <TouchableOpacity onPress={() => {
+                        navigate('Home'); // Navega a la pantalla 'Home' cuando se hace clic en el botón "Salir"
+                    }}>
+                        <Button style={styles.button}>Salir</Button>
+                    </TouchableOpacity>
+                </View>
             )}
         </View>
     );
@@ -115,20 +176,49 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         margin: 10,
-        alignItems: "center"
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     correctIndicator: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: [{ translateX: -50 }, { translateY: -50 }],
-        backgroundColor: "green",
+        marginTop: 10,
         padding: 10,
         borderRadius: 5
     },
     correctText: {
         color: "white",
         fontWeight: "bold"
+    },
+    resultadosContainer: {
+        marginTop: "40%",
+        alignItems: "center"
+    },
+    resultadosTitle: {
+        fontWeight: "bold",
+        fontSize: 24,
+        marginBottom: 20
+    },
+    resultadosText: {
+        fontSize: 18,
+        marginBottom: 20
+    },
+    respuestaSeleccionadaContainer: {
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 5
+    },
+    respuestaSeleccionadaText: {
+        color: "white",
+        fontWeight: "bold"
+    },
+    button: {
+        backgroundColor: "#CDBFEA",
+        borderRadius: 20,
+        marginBottom: 20,
+        width: 300,
+        height: 50,
+        alignItems: "center",
+        alignContent: "center",
     }
 });
 
