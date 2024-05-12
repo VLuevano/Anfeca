@@ -19,6 +19,8 @@ import OrganizacionScreen from "./screens/OrganizacionScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Infoo from "./screens/HomeScreenInformacion";
 import Quizz from "./screens/QuizzScreen";
+import HistorialScreen from "./screens/HistorialScreen";
+import ResumenScreen from "./screens/ResumenScreen";
 
 
 
@@ -57,6 +59,17 @@ function MyStack() {
                 name="quizz"  // Agregar la pantalla 'info' aquí
                 component={Quizz}  // Componente asociado a la pantalla 'info'
             />
+
+            <Stack.Screen
+                name="historial"  // Agregar la pantalla 'info' aquí
+                component={HistorialScreen}  // Componente asociado a la pantalla 'info'
+            />
+
+            <Stack.Screen
+                name="resumen"  // Agregar la pantalla 'info' aquí
+                component={ResumenScreen}  // Componente asociado a la pantalla 'info'
+            />
+
         </Stack.Navigator>
     );
 }

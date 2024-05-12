@@ -1,27 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, Modal, Button } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Importa Ionicons desde tu biblioteca de iconos
+import { Ionicons } from "@expo/vector-icons"; 
 import { useNavigation } from "@react-navigation/native";
-import HomeInformacion from "./HomeScreenInformacion";
-import info from "./HomeScreenInformacion";
-import { navigate } from "../Navigation";
-
-
-
-
-
-
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import Icon from "react-native-vector-icons/Ionicons";
-import { Image } from "react-native";
-import { createStackNavigator } from '@react-navigation/stack';
-
-import Infoo from "./HomeScreenInformacion";
-
-
-
-
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -30,44 +10,38 @@ const purpleP = "#CDBFEA";
 const purpleContornoP = "#4D59A5";
 const backgroundP = "#E0E6F6";
 
-const ComponenteTema = ({ titulo, informacion }) => {
-
-
-
-
+const ComponenteTema = ({ titulo, informacion, busqueda }) => {
   const [showModal, setShowModal] = useState(false);
+
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-
-
   const navigation = useNavigation();
 
   const handleJugarPress = () => {
-    toggleModal(); // Cierra el modal antes de navegar a la pantalla
-    navigation.navigate('info'); // Navega a la pantalla info
+    toggleModal();
+    navigation.navigate('info');
   };
 
-  const handleSalirPress = () => {
-    navigate('Home'); // Navega a la pantalla 'Home' cuando se hace clic en el botón "Salir"
-};
+  const handleHistorialPress = () => {
+    toggleModal();
+    navigation.navigate('historial');
+  };
 
-
+  const handleResumenPress = () => {
+    toggleModal();
+    navigation.navigate("resumen")
+  };
 
   return (
     <View style={styles.componenteTema}>
+      
       <TouchableOpacity style={styles.temaContainer} onPress={toggleModal}>
         <View style={styles.textContainer}>
           <Text style={styles.centroText}>{titulo}</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.izquierdaText}>{informacion} </Text>
-        </View>
-
-        <View>
-
+          <Text style={styles.izquierdaText}>{informacion}</Text>
         </View>
       </TouchableOpacity>
 
@@ -76,51 +50,28 @@ const ComponenteTema = ({ titulo, informacion }) => {
         transparent={true}
         visible={showModal}
         onRequestClose={() => setShowModal(false)}
-
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-
             <View style={styles.modalTitle}>
               <Text style={styles.modalTitleText}>{titulo}</Text>
-
-
             </View>
-
-
-
-            <View style={styles.buttonOpcionContainer} >
-
-              <View >
-                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
-                  <Text style={{marginTop: 5}}>Jugar</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View >
-                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
-                  <Text style={{marginTop: 5}}>Historial</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View >
-                <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
-                  <Text style={{marginTop: 5}} >Resumen</Text>
-                </TouchableOpacity>
-              </View>
-
+            <View style={styles.buttonOpcionContainer}>
+              <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                <Text style={{ marginTop: 5 }}>Jugar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonOpcion} onPress={handleHistorialPress}>
+                <Text style={{ marginTop: 5 }}>Historial</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonOpcion} onPress={handleResumenPress}>
+                <Text style={{ marginTop: 5 }}>Resumen</Text>
+              </TouchableOpacity>
               <View style={{ backgroundColor: yellowP, borderRadius: 20, marginTop: "40%" }}>
                 <TouchableOpacity>
                   <Button title="Cerrar" onPress={toggleModal} />
                 </TouchableOpacity>
               </View>
-
             </View>
-
-
-
-
-
           </View>
         </View>
       </Modal>
@@ -129,22 +80,27 @@ const ComponenteTema = ({ titulo, informacion }) => {
 };
 
 export default function MenuPrincipalHome() {
+  const [busqueda, setBusqueda] = useState("");
+
+  const handleBusqueda = (texto) => {
+    setBusqueda(texto);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.barraBuscar}>
         <TextInput
           style={styles.input}
           placeholder="Buscar..."
+          value={busqueda}
+          onChangeText={handleBusqueda}
         />
         <Ionicons name="search" size={24} color="black" style={styles.icon} />
       </View>
       <Text style={styles.bienvenidoText}>Bienvenido Christian</Text>
       <ComponenteTema titulo={"Metodo1"} informacion={"Enfermedades...."} />
-
       <ComponenteTema titulo={"Metodo2"} informacion={"Enfermedades...."} />
-
       <ComponenteTema titulo={"Metodo3"} informacion={"Enfermedades...."} />
-
     </View>
   );
 }
@@ -199,7 +155,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-
   },
   modalContent: {
     backgroundColor: backgroundP,
@@ -217,17 +172,13 @@ const styles = StyleSheet.create({
     height: 30,
     marginBottom: 20,
   },
-
-
   modalTitle: {
     fontSize: 24,
     padding: 30,
     alignItems: "center",
-    
   },
   modalTitleText: {
     marginBottom: "10%",
-    fontSize: 20, // Ajusta el tamaño del texto aquí
+    fontSize: 20,
   }
 });
-

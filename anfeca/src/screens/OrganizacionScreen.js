@@ -3,7 +3,6 @@ import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-nativ
 import { Ionicons } from "@expo/vector-icons";
 import { Linking } from 'react-native';
 
-
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
 const yellowP = "#F8DD6C";
@@ -11,7 +10,7 @@ const purpleP = "#CDBFEA";
 const purpleContornoP = "#4D59A5";
 const backgroundP = "#E0E6F6";
 
-const ComponenteOrganizacion = ({ titulo, informacion }) => {
+const ComponenteOrganizacion = ({ titulo, informacion, url }) => {
     const [mostrarInfo, setMostrarInfo] = useState(false);
 
     const toggleInfo = () => {
@@ -31,10 +30,9 @@ const ComponenteOrganizacion = ({ titulo, informacion }) => {
             {mostrarInfo && (
                 <View style={styles.informacionContainer}>
                     <Text style={styles.informacionText}>{informacion}</Text>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://www.amssac.org')}>
-    <Text style={{ textAlign: "center", marginTop: 10, color: purpleContornoP, fontWeight: 'bold', fontSize: 17 }}>Más información</Text>
-</TouchableOpacity>
-
+                    <TouchableOpacity onPress={() => Linking.openURL(url)}>
+                        <Text style={{ textAlign: "center", marginTop: 10, color: purpleContornoP, fontWeight: 'bold', fontSize: 17 }}>Más información</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -42,21 +40,45 @@ const ComponenteOrganizacion = ({ titulo, informacion }) => {
 };
 
 export default function OrganizacionScreen() {
+    const [busqueda, setBusqueda] = useState("");
+    const [asociacionesFiltradas, setAsociacionesFiltradas] = useState([]);
+
+    const handleBusqueda = (texto) => {
+        setBusqueda(texto);
+        const filtradas = data.filter((asociacion) =>
+            asociacion.titulo.toLowerCase().includes(texto.toLowerCase())
+        );
+        setAsociacionesFiltradas(filtradas);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.barraBuscar}>
                 <TextInput
                     style={styles.input}
                     placeholder="Buscar..."
+                    value={busqueda}
+                    onChangeText={handleBusqueda}
                 />
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
-            <Text style={styles.bienvenidoText}>Organizacones especializadas</Text>
-            <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} />
-            <ComponenteOrganizacion titulo={"IMSS"} informacion={"Informacaión..."} />
+            <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
+            {asociacionesFiltradas.map((asociacion, index) => (
+                <ComponenteOrganizacion
+                    key={index}
+                    titulo={asociacion.titulo}
+                    informacion={asociacion.informacion}
+                    url={asociacion.url}
+                />
+            ))}
         </View>
     );
 }
+
+const data = [
+    { titulo: "Asociación Mexicana para la Salud Sexual", informacion: "Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros", url: "https://www.amssac.org" },
+    { titulo: "IMSS", informacion: "Información...", url: "http://www.imss.gob.mx" },
+];
 
 const styles = StyleSheet.create({
     container: {
