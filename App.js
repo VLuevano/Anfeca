@@ -12,6 +12,10 @@ import RecuperarContraseña from './src/Vista/frmRecuperarContraseña';
 import Cuenta from './src/Vista/frmCuentaUsuario'; 
 import Organizaciones from './src/Vista/frmOrganizaciones';
 import Chatbot from './src/Vista/frmChatbot';
+import Info from './src/Vista/frmInfoQuizz'
+import Historial from './src/Vista/frmHistorial'
+import Resumen from './src/Vista/frmResumen'
+import Quizz from './src/Vista/frmQuizz'
 
 const Stack = createStackNavigator();
 
@@ -29,6 +33,10 @@ export default function App() {
         <Stack.Screen name="Cuenta" component={Cuenta}/>
         <Stack.Screen name="Organizaciones" component={Organizaciones}/>
         <Stack.Screen name="Chatbot" component={Chatbot}/>
+        <Stack.Screen name="Info" component={Info}/>
+        <Stack.Screen name="Historial" component={Historial}/>
+        <Stack.Screen name="Resumen" component={Resumen}/>
+        <Stack.Screen name="Quizz" component={Quizz}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
         height: 24,
         borderRadius: 20,
         marginRight: 20,
-        marginLeft: 20,
     },
     label: {
         width: "30%",

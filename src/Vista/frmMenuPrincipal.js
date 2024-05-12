@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { Modal, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -18,20 +20,74 @@ const backgroundP = "#FFF";
 
 const app = initializeApp(firebaseConfig);
 
-const ComponenteTema = ({ titulo, informacion }) => {
+const ComponenteTema = ({ titulo, informacion, busqueda }) => {
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    };
+
+    const navigation = useNavigation();
+
+    const handleJugarPress = () => {
+        toggleModal();
+        navigation.navigate('Info');
+    };
+
+    const handleHistorialPress = () => {
+        toggleModal();
+        navigation.navigate('Historial');
+    };
+
+    const handleResumenPress = () => {
+        toggleModal();
+        navigation.navigate('Resumen');
+    };
+
     return (
         <View style={styles.componenteTema}>
-            <TouchableOpacity style={styles.temaContainer}>
+            <TouchableOpacity style={styles.temaContainer} onPress={toggleModal}>
                 <View style={styles.textContainer}>
                     <Text style={styles.centroText}>{titulo}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.izquierdaText}>{informacion} </Text>
+                    <Text style={styles.izquierdaText}>{informacion}</Text>
                 </View>
             </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showModal}
+                onRequestClose={() => setShowModal(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalTitle}>
+                            <Text style={styles.modalTitleText}>{titulo}</Text>
+                        </View>
+                        <View style={styles.buttonOpcionContainer}>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                                <Text>Jugar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleHistorialPress}>
+                                <Text>Historial</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleResumenPress}>
+                                <Text>Resumen</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ backgroundColor: yellowP, borderRadius: 10, marginBottom: 10, padding: 1, width: 100, alignItems: 'center'}}
+                                onPress={() => setShowModal(false)}
+                            >
+                                <Text>Cerrar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
+
 
 export default function MenuPrincipalHome() {
 
@@ -43,14 +99,14 @@ export default function MenuPrincipalHome() {
         const fetchUserData = async () => {
             const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
             const userDocSnap = await getDoc(userDoc);
-    
+
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
                 console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
                 setNombreUsuario(userData.username);
             }
         };
-    
+
         fetchUserData();
     }, []);
 
@@ -66,11 +122,6 @@ export default function MenuPrincipalHome() {
             </View>
             <Text style={styles.bienvenidoText}>Bienvenido {userName}</Text>
             <ComponenteTema titulo={"Metodos"} informacion={"Enfermedades...."} />
-
-            <ComponenteTema titulo={"Metodos2"} informacion={"Enfermedades...."} />
-
-            <ComponenteTema titulo={"Metodos3"} informacion={"Enfermedades...."} />
-
             <BottomBar />
         </View>
     );
@@ -123,6 +174,37 @@ const styles = StyleSheet.create({
     bienvenidoText: {
         textAlign: "center",
         fontSize: 30,
+        fontWeight: 'bold',
+        color: '#000',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        backgroundColor: backgroundP,
+        padding: 20,
+        borderRadius: 10,
+        elevation: 5,
+        width: "75%",
+        height: "50%",
+    },
+    buttonOpcion: {
+        backgroundColor: purpleP,
+        borderRadius: 20,
+        marginBottom: 20,
+        padding: 5,
+    },
+    modalTitle: {
+        fontSize: 24,
+        padding: 30,
+        alignItems: "center"
+    },
+    modalTitleText: {
+        textAlign: "center",
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#000',
     },
