@@ -42,13 +42,6 @@ export default function OrganizacionScreen() {
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
-            <View style={styles.barraBuscar}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Buscar..."
-                />
-                <Ionicons name="search" size={24} color="black" style={styles.icon} />
-            </View>
             <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
             <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} />
             <ComponenteOrganizacion titulo={"IMSS"} informacion={"Informacaión..."} />
@@ -104,6 +97,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         color: '#000',
+        marginTop: 50,
     },
     informacionContainer: {
         paddingHorizontal: 10,

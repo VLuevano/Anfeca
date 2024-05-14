@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Button } from 'react-native';
+import { sharedStyles } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 const HistorialScreen = () => {
     // Suponiendo que tienes un array de juegos jugados con la siguiente estructura
@@ -9,8 +11,18 @@ const HistorialScreen = () => {
         { tema: 'Tema 3', fecha: '12/05/2024', puntos: 90 },
     ];
 
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
+            <View style={sharedStyles.espacioSuperior}></View>
+            <Text style={sharedStyles.titulo}>Historial</Text>
+            <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('MenuPrincipal')}>
+                <Image
+                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    style={sharedStyles.iconoVolver}
+                />
+            </TouchableOpacity>
             <View style={styles.encabezado}>
                 <Text style={styles.encabezadoTexto}>Tema</Text>
                 <Text style={styles.encabezadoTexto}>Fecha</Text>
@@ -61,7 +73,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         flex: 1,
         textAlign: 'center',
-    },
+    },sharedStyles,
 });
 
 export default HistorialScreen;
