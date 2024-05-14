@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-native';
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { sharedStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
@@ -23,7 +23,8 @@ const ForgotPasswordScreen = () => {
                 console.log(message); // Agregar este console.log
             })
             .catch((error) => {
-                console.log('Error:', error); // Agregar este console.log
+                Alert.alert('Error:', "Ingrese un correo válido\n "+ error);
+                console.log('Error:', error);  // Agregar este console.log
             });
             setModalVisible(true); // Mostrar el modal después de actualizar el mensaje
     };
