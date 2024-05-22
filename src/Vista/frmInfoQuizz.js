@@ -1,27 +1,31 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Text, View, StyleSheet } from "react-native";
 
 const Infoo = () => {
-    const navigation = useNavigation(); // Mover la declaración de navigation aquí
+    const navigation = useNavigation();
+    const route = useRoute();
 
-    const handleQuizzPress = () => {
-        navigation.navigate('Quizz'); // Utilizar navigation dentro de la función Infoo
+    const { titulo, informacion, preguntas } = route.params;
+
+    const handleContinuarPress = () => {
+        navigation.navigate('Quizz', { preguntas: preguntas, titulo: titulo }); 
+        console.log("Valor de preguntas info:", preguntas);
     };
 
     return (
         <View>
             <View style={styles.container}>
-                <Text style={styles.title}>Métodos anticonceptivos</Text>
+                <Text style={styles.title}>{titulo}</Text>
             </View>
 
             <View>
-                <Text style={styles.contenidoTxt}>Los métodos anticonceptivos son diferentes maneras de prevenir un embarazo. Sirven para ayudar a las personas a controlar cuándo quieren tener hijos y cuándo no. Estos métodos pueden ser usados por hombres o mujeres, y algunos son más efectivos que otros.</Text>
+                <Text style={styles.contenidoTxt}>{informacion}</Text>
             </View>
 
-            <View style={{alignItems: "center"}} >
-                <TouchableOpacity onPress={handleQuizzPress} style={styles.botton}>
-                    <Text style={{marginTop: 10}} >Siguiente</Text>
+            <View style={{ alignItems: "center" }} >
+                <TouchableOpacity onPress={handleContinuarPress} style={styles.botton}>
+                    <Text style={{ marginTop: 10 }} >Siguiente</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { sharedStyles } from './styles';
 
 const ResumenScreen = () => {
     const navigation = useNavigation();
-
-    const handleQuizzPress = () => {
-        navigation.navigate('quizz');
-    };
+    const route = useRoute();
+    const { titulo, resumen } = route.params;
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -20,14 +18,8 @@ const ResumenScreen = () => {
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
-            <Text style={styles.title}>Métodos anticonceptivos</Text>
-            <Text style={styles.contenidoTxt}>
-                Los métodos anticonceptivos son diferentes maneras de prevenir un embarazo. Sirven para ayudar a las personas a controlar cuándo quieren tener hijos y cuándo no. Estos métodos pueden ser usados por hombres o mujeres, y algunos son más efectivos que otros.
-
-                Se clasifican en varios tipos:
-
-                Anticonceptivos de barrera: Estos métodos evitan que los espermatozoides lleguen al óvulo. Ejemplos incluyen condones (masculinos y femeninos), diafragma y capuchón cervical.
-            </Text>
+            <Text style={styles.title}>{titulo}</Text>
+            <Text style={styles.contenidoTxt}>{resumen}</Text>
         </ScrollView>
     );
 };

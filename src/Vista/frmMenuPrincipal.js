@@ -1,14 +1,12 @@
-import React from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Importa Ionicons desde tu biblioteca de iconos
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Modal } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { sharedStyles } from './styles';
 import BottomBar from './BottomBar';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { Modal, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const greyP = "#C8CCD8";
@@ -20,7 +18,7 @@ const backgroundP = "#FFF";
 
 const app = initializeApp(firebaseConfig);
 
-const ComponenteTema = ({ titulo, informacion, busqueda }) => {
+const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) => {
     const [showModal, setShowModal] = useState(false);
 
     const toggleModal = () => {
@@ -31,17 +29,20 @@ const ComponenteTema = ({ titulo, informacion, busqueda }) => {
 
     const handleJugarPress = () => {
         toggleModal();
-        navigation.navigate('Info');
+        navigation.navigate('Info', { titulo, informacion, preguntas });
+        console.log("Valor de titulo:", titulo);
+        console.log("Valor de info:", informacion);
+        console.log("Valor de preguntas menu:", preguntas);
     };
 
     const handleHistorialPress = () => {
         toggleModal();
-        navigation.navigate('Historial');
+        navigation.navigate('Historial', { titulo, historial });
     };
 
     const handleResumenPress = () => {
         toggleModal();
-        navigation.navigate('Resumen');
+        navigation.navigate('Resumen', { titulo, resumen });
     };
 
     return (
@@ -75,7 +76,7 @@ const ComponenteTema = ({ titulo, informacion, busqueda }) => {
                                 <Text>Resumen</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={{ backgroundColor: yellowP, borderRadius: 10, marginBottom: 10, padding: 1, width: 100, alignItems: 'center'}}
+                                style={{ backgroundColor: yellowP, borderRadius: 10, marginBottom: 10, padding: 1, width: 100, alignItems: 'center' }}
                                 onPress={() => setShowModal(false)}
                             >
                                 <Text>Cerrar</Text>
@@ -90,10 +91,39 @@ const ComponenteTema = ({ titulo, informacion, busqueda }) => {
 
 
 export default function MenuPrincipalHome() {
-
     const db = getFirestore(app);
-
     const [userName, setNombreUsuario] = useState('');
+    const [temas, setTemas] = useState([
+        {
+            titulo: 'Tema 1',
+            informacion: 'Información 1',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 1", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 1 aquí...
+            ],
+            resumen: 'Este es el resumen del Tema 1.',
+            historial: [
+                { tema: 'Tema 1', fecha: '10/05/2024', puntos: 80 },
+                { tema: 'Tema 1', fecha: '11/05/2024', puntos: 75 },
+                { tema: 'Tema 1', fecha: '12/05/2024', puntos: 90 },
+            ],
+        },
+        {
+            titulo: 'Tema 2',
+            informacion: 'Información 2',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 2", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 2 aquí...
+            ],
+            resumen: 'Este es el resumen del Tema 2.',
+            historial: [
+                { tema: 'Tema 2', fecha: '10/05/2024', puntos: 80 },
+                { tema: 'Tema 2', fecha: '11/05/2024', puntos: 75 },
+                { tema: 'Tema2', fecha: '12/05/2024', puntos: 90 },
+            ],
+        },
+        // Agrega más temas aquí...
+    ]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -102,7 +132,7 @@ export default function MenuPrincipalHome() {
 
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
-                console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
+                console.log('Datos del usuario recuperados de Firestore:', userData);
                 setNombreUsuario(userData.username);
             }
         };
@@ -121,7 +151,16 @@ export default function MenuPrincipalHome() {
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
             <Text style={styles.bienvenidoText}>Bienvenido {userName}</Text>
-            <ComponenteTema titulo={"Metodos"} informacion={"Enfermedades...."} />
+            {temas.map((tema, index) => (
+                <ComponenteTema
+                    key={index}
+                    titulo={tema.titulo}
+                    informacion={tema.informacion}
+                    preguntas={tema.preguntas}
+                    resumen={tema.resumen}
+                    historial={tema.historial}
+                />
+            ))}
             <BottomBar />
         </View>
     );
@@ -132,7 +171,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
-        justifyContent: 'space-between', // Alinea los elementos en el eje principal
+        justifyContent: 'space-between',
     },
     barraBuscar: {
         flexDirection: 'row',
