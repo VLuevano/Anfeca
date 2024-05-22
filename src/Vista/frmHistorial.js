@@ -1,17 +1,48 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { sharedStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
+import { firebaseConfig } from '../../firebase-config';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 const HistorialScreen = () => {
-    // Suponiendo que tienes un array de juegos jugados con la siguiente estructura
-    const historialJuegos = [
-        { tema: 'Tema 1', fecha: '10/05/2024', puntos: 80 },
-        { tema: 'Tema 2', fecha: '11/05/2024', puntos: 75 },
-        { tema: 'Tema 3', fecha: '12/05/2024', puntos: 90 },
-    ];
-
+    const [historialJuegos, setHistorialJuegos] = useState([]); // Estado para almacenar los datos
     const navigation = useNavigation();
+
+    useEffect(() => {
+        const fetchHistorial = async (uid) => {
+            try {
+                const docRef = doc(db, 'Historial', uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    console.log('Document data:', docSnap.data());
+                    setHistorialJuegos(docSnap.data().resultados || []);
+                } else {
+                    console.log('No such document!');
+                }
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        };
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User is signed in:', user);
+                fetchHistorial(user.uid);
+            } else {
+                console.log('No user is signed in.');
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -28,13 +59,15 @@ const HistorialScreen = () => {
                 <Text style={styles.encabezadoTexto}>Fecha</Text>
                 <Text style={styles.encabezadoTexto}>Pts</Text>
             </View>
-            {historialJuegos.map((juego, index) => (
-                <View key={index} style={styles.juegoContainer}>
-                    <Text style={styles.text}>{juego.tema}</Text>
-                    <Text style={styles.text}>{juego.fecha}</Text>
-                    <Text style={styles.text}>{juego.puntos}</Text>
-                </View>
-            ))}
+            <ScrollView style={styles.scrollView}>
+                {historialJuegos.map((juego, index) => (
+                    <View key={index} style={styles.juegoContainer}>
+                        <Text style={styles.text}>{juego.tema}</Text>
+                        <Text style={styles.text}>{juego.fecha}</Text>
+                        <Text style={styles.text}>{juego.aciertos}</Text>
+                    </View>
+                ))}
+            </ScrollView>
         </View>
     );
 };
@@ -43,8 +76,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         paddingHorizontal: 20,
+        paddingTop: 20,
     },
     encabezado: {
         flexDirection: 'row',
@@ -57,6 +90,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         flex: 1,
         textAlign: 'center',
+    },
+    scrollView: {
+        width: '100%',
     },
     juegoContainer: {
         flexDirection: 'row',
@@ -73,7 +109,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         flex: 1,
         textAlign: 'center',
-    },sharedStyles,
+    },
 });
 
 export default HistorialScreen;

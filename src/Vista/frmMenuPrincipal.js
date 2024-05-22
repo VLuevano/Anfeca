@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Modal } from "react-native";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { sharedStyles } from './styles';
 import BottomBar from './BottomBar';
@@ -37,7 +37,7 @@ const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) 
 
     const handleHistorialPress = () => {
         toggleModal();
-        navigation.navigate('Historial', { titulo, historial });
+        navigation.navigate('Historial');
     };
 
     const handleResumenPress = () => {
@@ -89,7 +89,6 @@ const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) 
     );
 };
 
-
 export default function MenuPrincipalHome() {
     const db = getFirestore(app);
     const [userName, setNombreUsuario] = useState('');
@@ -102,11 +101,6 @@ export default function MenuPrincipalHome() {
                 // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 1.',
-            historial: [
-                { tema: 'Tema 1', fecha: '10/05/2024', puntos: 80 },
-                { tema: 'Tema 1', fecha: '11/05/2024', puntos: 75 },
-                { tema: 'Tema 1', fecha: '12/05/2024', puntos: 90 },
-            ],
         },
         {
             titulo: 'Tema 2',
@@ -116,11 +110,42 @@ export default function MenuPrincipalHome() {
                 // Más preguntas del Tema 2 aquí...
             ],
             resumen: 'Este es el resumen del Tema 2.',
-            historial: [
-                { tema: 'Tema 2', fecha: '10/05/2024', puntos: 80 },
-                { tema: 'Tema 2', fecha: '11/05/2024', puntos: 75 },
-                { tema: 'Tema2', fecha: '12/05/2024', puntos: 90 },
+        },
+        {
+            titulo: 'Tema 3',
+            informacion: 'Información 3',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 3", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 3 aquí...
             ],
+            resumen: 'Este es el resumen del Tema 3.',
+        },
+        {
+            titulo: 'Tema 4',
+            informacion: 'Información 4',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 4", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 4 aquí...
+            ],
+            resumen: 'Este es el resumen del Tema 4.',
+        },
+        {
+            titulo: 'Tema 5',
+            informacion: 'Información 5',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 5", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 5 aquí...
+            ],
+            resumen: 'Este es el resumen del Tema 5.',
+        },
+        {
+            titulo: 'Tema 6',
+            informacion: 'Información 6',
+            preguntas: [
+                { pregunta: "Pregunta 1 del Tema 6", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 6 aquí...
+            ],
+            resumen: 'Este es el resumen del Tema 6.',
         },
         // Agrega más temas aquí...
     ]);
@@ -151,16 +176,18 @@ export default function MenuPrincipalHome() {
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
             <Text style={styles.bienvenidoText}>Bienvenido {userName}</Text>
-            {temas.map((tema, index) => (
-                <ComponenteTema
-                    key={index}
-                    titulo={tema.titulo}
-                    informacion={tema.informacion}
-                    preguntas={tema.preguntas}
-                    resumen={tema.resumen}
-                    historial={tema.historial}
-                />
-            ))}
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                {temas.map((tema, index) => (
+                    <ComponenteTema
+                        key={index}
+                        titulo={tema.titulo}
+                        informacion={tema.informacion}
+                        preguntas={tema.preguntas}
+                        resumen={tema.resumen}
+                        historial={tema.historial}
+                    />
+                ))}
+            </ScrollView>
             <BottomBar />
         </View>
     );
@@ -172,6 +199,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
         justifyContent: 'space-between',
+    },
+    scrollViewContent: {
+        paddingBottom: 20,
     },
     barraBuscar: {
         flexDirection: 'row',
