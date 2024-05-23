@@ -101,54 +101,62 @@ export default function MenuPrincipalHome() {
                 // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 1.',
+            vendido: false
         },
         {
             titulo: 'Tema 2',
             informacion: 'Información 2',
             preguntas: [
-                { pregunta: "Pregunta 1 del Tema 2", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 2 aquí...
+                { pregunta: "Pregunta 1 del Tema 3", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
+                // Más preguntas del Tema 3 aquí...
             ],
             resumen: 'Este es el resumen del Tema 2.',
+            vendido: false
         },
         {
             titulo: 'Tema 3',
             informacion: 'Información 3',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 3", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 3 aquí...
+                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 3.',
+            vendido: false
         },
         {
             titulo: 'Tema 4',
             informacion: 'Información 4',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 4", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 4 aquí...
+                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 4.',
+            vendido: false
         },
         {
             titulo: 'Tema 5',
             informacion: 'Información 5',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 5", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 5 aquí...
+                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 5.',
+            vendido: false
         },
         {
             titulo: 'Tema 6',
             informacion: 'Información 6',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 6", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 6 aquí...
+                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 6.',
+            vendido: false
         },
-        // Agrega más temas aquí...
+        // Otros temas...
+
     ]);
+    const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -165,6 +173,11 @@ export default function MenuPrincipalHome() {
         fetchUserData();
     }, []);
 
+    // Filtra los temas en función del texto de búsqueda
+    const filteredTemas = temas.filter(tema =>
+        tema.titulo.toLowerCase().includes(searchText.toLowerCase())
+    );
+
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
@@ -172,12 +185,14 @@ export default function MenuPrincipalHome() {
                 <TextInput
                     style={styles.input}
                     placeholder="Buscar..."
+                    onChangeText={setSearchText}
+                    value={searchText}
                 />
                 <Ionicons name="search" size={24} color="black" style={styles.icon} />
             </View>
             <Text style={styles.bienvenidoText}>Bienvenido {userName}</Text>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                {temas.map((tema, index) => (
+                {filteredTemas.map((tema, index) => (
                     <ComponenteTema
                         key={index}
                         titulo={tema.titulo}

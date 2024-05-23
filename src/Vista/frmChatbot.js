@@ -75,7 +75,7 @@ class Chatbot extends Component {
                     user: {
                         _id: 2,
                         name: 'React Native',
-                        avatar: 'https://s3.us-east-2.amazonaws.com/biotec-io/robot.png',
+                        //avatar: 'https://s3.us-east-2.amazonaws.com/biotec-io/robot.png',
                     },
                 },
             ],
