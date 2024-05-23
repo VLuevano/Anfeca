@@ -6,7 +6,7 @@ import BottomBar from './BottomBar';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigation } from "@react-navigation/native";
 
 const greyP = "#C8CCD8";
@@ -18,38 +18,36 @@ const backgroundP = "#FFF";
 
 const app = initializeApp(firebaseConfig);
 
-const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) => {
+const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial, locked, onUnlock }) => {
     const [showModal, setShowModal] = useState(false);
+    const navigation = useNavigation();
 
     const toggleModal = () => {
         setShowModal(!showModal);
     };
 
-    const navigation = useNavigation();
-
     const handleJugarPress = () => {
-        toggleModal();
-        navigation.navigate('Info', { titulo, informacion, preguntas });
-        console.log("Valor de titulo:", titulo);
-        console.log("Valor de info:", informacion);
-        console.log("Valor de preguntas menu:", preguntas);
+        if (locked) {
+            onUnlock(titulo);
+        } else {
+            toggleModal();
+        }
     };
 
-    const handleHistorialPress = () => {
+    const handleNavigate = (screen, params) => {
         toggleModal();
-        navigation.navigate('Historial');
-    };
-
-    const handleResumenPress = () => {
-        toggleModal();
-        navigation.navigate('Resumen', { titulo, resumen });
+        setTimeout(() => {
+            navigation.navigate(screen, params);
+        }, 300);
     };
 
     return (
         <View style={styles.componenteTema}>
-            <TouchableOpacity style={styles.temaContainer} onPress={toggleModal}>
+            <TouchableOpacity style={styles.temaContainer} onPress={handleJugarPress}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.centroText}>{titulo}</Text>
+                    <Text style={styles.centroText}>
+                        {titulo} {locked && <Ionicons name="lock-closed" size={20} color="red" />}
+                    </Text>
                     <Text style={styles.izquierdaText}>{informacion}</Text>
                 </View>
             </TouchableOpacity>
@@ -66,13 +64,13 @@ const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) 
                             <Text style={styles.modalTitleText}>{titulo}</Text>
                         </View>
                         <View style={styles.buttonOpcionContainer}>
-                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleJugarPress}>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={() => handleNavigate('Info', { titulo, informacion, preguntas })}>
                                 <Text>Jugar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleHistorialPress}>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={() => handleNavigate('Historial')}>
                                 <Text>Historial</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleResumenPress}>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={() => handleNavigate('Resumen', { titulo, resumen })}>
                                 <Text>Resumen</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -92,69 +90,62 @@ const ComponenteTema = ({ titulo, informacion, preguntas, resumen, historial }) 
 export default function MenuPrincipalHome() {
     const db = getFirestore(app);
     const [userName, setNombreUsuario] = useState('');
+    const [temaSeleccionado, setTemaSeleccionado] = useState(null);
     const [temas, setTemas] = useState([
         {
             titulo: 'Tema 1',
             informacion: 'Información 1',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 1", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 1.',
-            vendido: false
         },
         {
             titulo: 'Tema 2',
             informacion: 'Información 2',
             preguntas: [
-                { pregunta: "Pregunta 1 del Tema 3", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 3 aquí...
+                { pregunta: "Pregunta 1 del Tema 2", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
             ],
             resumen: 'Este es el resumen del Tema 2.',
-            vendido: false
         },
         {
             titulo: 'Tema 3',
             informacion: 'Información 3',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 3", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 3.',
-            vendido: false
         },
         {
             titulo: 'Tema 4',
             informacion: 'Información 4',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 4", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 4.',
-            vendido: false
+            vendido: false,
+            locked: true
         },
         {
             titulo: 'Tema 5',
             informacion: 'Información 5',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 5", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 5.',
-            vendido: false
+            vendido: false,
+            locked: true
         },
         {
             titulo: 'Tema 6',
             informacion: 'Información 6',
             preguntas: [
                 { pregunta: "Pregunta 1 del Tema 6", opciones: ["Opción 1", "Opción 2", "Opción 3", "Opción 4"], respuestaCorrecta: "Opción 1" },
-                // Más preguntas del Tema 1 aquí...
             ],
             resumen: 'Este es el resumen del Tema 6.',
-            vendido: false
+            vendido: false,
+            locked: true
         },
-        // Otros temas...
-
     ]);
     const [searchText, setSearchText] = useState('');
 
@@ -167,13 +158,37 @@ export default function MenuPrincipalHome() {
                 const userData = userDocSnap.data();
                 console.log('Datos del usuario recuperados de Firestore:', userData);
                 setNombreUsuario(userData.username);
+                // Actualiza los temas bloqueados desde Firestore si es necesario
+                if (userData.temas) {
+                    setTemas(userData.temas);
+                }
             }
         };
 
         fetchUserData();
     }, []);
 
-    // Filtra los temas en función del texto de búsqueda
+    const handleUnlockTema = (titulo) => {
+        setTemaSeleccionado(titulo);
+    };
+
+    const handleCompraTema = async () => {
+        const updatedTemas = temas.map(tema => {
+            if (tema.titulo === temaSeleccionado) {
+                return { ...tema, locked: false };
+            }
+            return tema;
+        });
+        setTemas(updatedTemas);
+
+        const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
+        await updateDoc(userDoc, {
+            temas: updatedTemas
+        });
+
+        setTemaSeleccionado(null);
+    };
+
     const filteredTemas = temas.filter(tema =>
         tema.titulo.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -200,9 +215,33 @@ export default function MenuPrincipalHome() {
                         preguntas={tema.preguntas}
                         resumen={tema.resumen}
                         historial={tema.historial}
+                        locked={tema.locked}
+                        onUnlock={handleUnlockTema}
                     />
                 ))}
             </ScrollView>
+            
+            {temaSeleccionado && (
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={!!temaSeleccionado}
+                    onRequestClose={() => setTemaSeleccionado(null)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitleText}>Comprar {temaSeleccionado}</Text>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={handleCompraTema}>
+                                <Text>Comprar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonOpcion} onPress={() => setTemaSeleccionado(null)}>
+                                <Text>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+            )}
+            
             <BottomBar />
         </View>
     );
@@ -211,86 +250,87 @@ export default function MenuPrincipalHome() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 40,
+        paddingTop: 60,
         backgroundColor: '#E0E6F6',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between', // Alinea los elementos en el eje principal
     },
-    scrollViewContent: {
-        paddingBottom: 20,
+    bienvenidoText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginVertical: 10,
+        textAlign: 'center',
     },
     barraBuscar: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: backgroundP,
-        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal : 10,
         paddingHorizontal: 10,
-        marginHorizontal: 20,
-        marginTop: 30,
-        width: "85%",
-        height: "5%",
+        paddingVertical: 8,
+        backgroundColor: greyP,
+        borderRadius: 8,
     },
     input: {
         flex: 1,
-        marginLeft: 10,
+        marginRight: 8,
     },
     icon: {
-        marginLeft: 10,
+        marginRight: 8,
+    },
+    scrollViewContent: {
+        paddingBottom: 100,
     },
     componenteTema: {
         backgroundColor: purpleP,
-        borderRadius: 20,
-        margin: 10,
+        marginBottom: 16,
+        borderRadius: 10,
+        padding: 16,
+        marginHorizontal: 10,
     },
     temaContainer: {
-        flexDirection: "column",
-        alignItems: "center",
-        padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     textContainer: {
-        width: "100%",
-    },
-    izquierdaText: {
-        textAlign: "left",
+        flex: 1,
     },
     centroText: {
-        textAlign: "center",
-    },
-    bienvenidoText: {
-        textAlign: "center",
-        fontSize: 30,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#000',
+        textAlign: 'center',
+    },
+    izquierdaText: {
+        fontSize: 14,
+        color: 'black', // Cambiado a negro
     },
     modalContainer: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
         backgroundColor: backgroundP,
         padding: 20,
         borderRadius: 10,
-        elevation: 5,
-        width: "75%",
-        height: "50%",
+        alignItems: 'center',
+    },
+    modalTitle: {
+        marginBottom: 20,
+    },
+    modalTitleText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    buttonOpcionContainer: {
+        alignItems: 'center',
     },
     buttonOpcion: {
         backgroundColor: purpleP,
-        borderRadius: 20,
-        marginBottom: 20,
-        padding: 5,
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 10,
+        width: 100,
+        alignItems: 'center',
     },
-    modalTitle: {
-        fontSize: 24,
-        padding: 30,
-        alignItems: "center"
-    },
-    modalTitleText: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#000',
-    },
-    sharedStyles,
 });

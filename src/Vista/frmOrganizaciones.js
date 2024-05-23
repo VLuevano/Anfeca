@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-nativ
 import { Ionicons } from "@expo/vector-icons";
 import BottomBar from './BottomBar';
 import { sharedStyles } from './styles';
+import { Linking } from 'react-native';
 
 const greyP = "#C8CCD8";
 const pinkP = "#FFABC5";
@@ -11,7 +12,12 @@ const purpleP = "#CDBFEA";
 const purpleContornoP = "#4D59A5";
 const backgroundP = "#FFF";
 
-const ComponenteOrganizacion = ({ titulo, informacion }) => {
+const data = [
+    { titulo: "Asociación Mexicana para la Salud Sexual", informacion: "Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros", url: "https://www.amssac.org" },
+    { titulo: "IMSS", informacion: "Información...", url: "http://www.imss.gob.mx" },
+];
+
+const ComponenteOrganizacion = ({ titulo, informacion, url }) => {
     const [mostrarInfo, setMostrarInfo] = useState(false);
 
     const toggleInfo = () => {
@@ -19,7 +25,6 @@ const ComponenteOrganizacion = ({ titulo, informacion }) => {
     };
 
     return (
-        
         <View style={styles.componenteTema}>
             <TouchableOpacity style={styles.temaContainer} onPress={toggleInfo}>
                 <View style={styles.textContainer}>
@@ -32,6 +37,9 @@ const ComponenteOrganizacion = ({ titulo, informacion }) => {
             {mostrarInfo && (
                 <View style={styles.informacionContainer}>
                     <Text style={styles.informacionText}>{informacion}</Text>
+                    <TouchableOpacity onPress={() => Linking.openURL(url)}>
+                        <Text style={{ textAlign: "center", marginTop: 10, color: purpleContornoP, fontWeight: 'bold', fontSize: 17 }}>Más información</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -43,8 +51,8 @@ export default function OrganizacionScreen() {
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
             <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
-            <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} />
-            <ComponenteOrganizacion titulo={"IMSS"} informacion={"Informacaión..."} />
+            <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} url={"https://www.amssac.org/"}/>
+            <ComponenteOrganizacion titulo={"IMSS"} informacion={"Información..."} url={"http://www.imss.gob.mx"}/>
             <BottomBar />
         </View>
     );
