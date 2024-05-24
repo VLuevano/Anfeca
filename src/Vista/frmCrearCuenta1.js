@@ -156,9 +156,11 @@ function StepFour({ onNext, onSelect }) {
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const avatarPaths = [
-        '47207d84-logo-simi-e1667606405832.png',
-        'OIP.jpeg',
-        'hqdefault.jpg',
+        'nutria.jpg',
+        'panda.jpg',
+        'leon.jpg',
+        'perro.jpg',
+        'gato.jpg',
     ];
 
     const storage = getStorage();
