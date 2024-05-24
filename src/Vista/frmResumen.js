@@ -6,21 +6,23 @@ import { sharedStyles } from './styles';
 const ResumenScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { titulo, resumen } = route.params;
+    const { titulo, informacion } = route.params;
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View>
             <View style={sharedStyles.espacioSuperior}></View>
-            <Text style={sharedStyles.titulo}>Resumen</Text>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('MenuPrincipal')}>
                 <Image
                     source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
-            <Text style={styles.title}>{titulo}</Text>
-            <Text style={styles.contenidoTxt}>{resumen}</Text>
-        </ScrollView>
+            <ScrollView contentContainerStyle={styles.container}>
+                <Text style={sharedStyles.titulo}>Resumen</Text>
+                <Text style={styles.title}>{titulo}</Text>
+                <Text style={styles.contenidoTxt}>{informacion}</Text>
+            </ScrollView>
+        </View>
     );
 };
 
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
     contenidoTxt: {
         fontSize: 20,
         paddingVertical: 10,
+        marginHorizontal: 10,
     },
 });
 

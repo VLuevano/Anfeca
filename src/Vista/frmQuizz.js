@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: "bold",
-        fontSize: 30,
+        fontSize: 20,
         textAlign: "center"
     },
     counter: {

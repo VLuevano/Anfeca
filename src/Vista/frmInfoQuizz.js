@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
 import { Text, View, StyleSheet } from "react-native";
 
 const Infoo = () => {
@@ -9,12 +9,12 @@ const Infoo = () => {
     const { titulo, informacion, preguntas } = route.params;
 
     const handleContinuarPress = () => {
-        navigation.navigate('Quizz', { preguntas: preguntas, titulo: titulo }); 
+        navigation.navigate('Quizz', { preguntas: preguntas, titulo: titulo });
         console.log("Valor de preguntas info:", preguntas);
     };
 
     return (
-        <View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
                 <Text style={styles.title}>{titulo}</Text>
             </View>
@@ -28,11 +28,16 @@ const Infoo = () => {
                     <Text style={{ marginTop: 10 }} >Siguiente</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingVertical: 20,
+    },
     container: {
         textAlign: "center",
         marginTop: "5%",

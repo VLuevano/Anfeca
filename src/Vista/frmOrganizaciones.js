@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BottomBar from './BottomBar';
 import { sharedStyles } from './styles';
@@ -50,9 +50,11 @@ export default function OrganizacionScreen() {
     return (
         <View style={styles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
-            <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
-            <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"Atención para resolver problemas relacionados con las disfunciones sexuales, conflictos de orientación sexual, abuso y violencia sexual, entre otros"} url={"https://www.amssac.org/"}/>
-            <ComponenteOrganizacion titulo={"IMSS"} informacion={"Información..."} url={"http://www.imss.gob.mx"}/>
+            <ScrollView>
+                <Text style={styles.bienvenidoText}>Organizaciones especializadas</Text>
+                <ComponenteOrganizacion titulo={"Asociación Mexicana para la Salud Sexual"} informacion={"La Asociación Mexicana para la Salud Sexual (AMSSAC) es una asociación civil que ofrece una variedad de servicios, incluyendo atención clínica para personas que desean resolver problemas en su sexualidad, como disfunciones sexuales, conflictos con la orientación sexual, problemas relacionados con el abuso y la violencia sexuales, conflictos con la identidad sexual y trastornos parafílicos."} url={"https://www.amssac.org/"} />
+                <ComponenteOrganizacion titulo={"Instituto Mexicano del Seguro Social"} informacion={"El Instituto Mexicano del Seguro Social (IMSS) es un organismo descentralizado del gobierno federal mexicano, sectorizado a la Secretaría de Salud. Su misión es brindar servicios de salud y de seguridad social a la población que cuenta con afiliación al instituto."} url={"http://www.imss.gob.mx"} />
+            </ScrollView>
             <BottomBar />
         </View>
     );
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         width: "85%",
         height: "5%",
-        marginTop : 60,
+        marginTop: 60,
     },
     input: {
         flex: 1,

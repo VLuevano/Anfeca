@@ -57,14 +57,14 @@ const HistorialScreen = () => {
             <View style={styles.encabezado}>
                 <Text style={styles.encabezadoTexto}>Tema</Text>
                 <Text style={styles.encabezadoTexto}>Fecha</Text>
-                <Text style={styles.encabezadoTexto}>Pts</Text>
+                <Text style={styles.encabezadoTexto}>Puntaje</Text>
             </View>
             <ScrollView style={styles.scrollView}>
                 {historialJuegos.map((juego, index) => (
                     <View key={index} style={styles.juegoContainer}>
                         <Text style={styles.text}>{juego.tema}</Text>
                         <Text style={styles.text}>{juego.fecha}</Text>
-                        <Text style={styles.text}>{juego.aciertos}</Text>
+                        <Text style={styles.text}>{juego.aciertos}/{juego.totalPreguntas}</Text>
                     </View>
                 ))}
             </ScrollView>
