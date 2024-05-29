@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 export const sharedStyles = StyleSheet.create({
     container: {
@@ -13,6 +13,7 @@ export const sharedStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: 20,
+        height: Dimensions.get('window').height,
     },
     espacioSuperior: {
         height: 60,

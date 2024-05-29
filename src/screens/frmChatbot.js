@@ -6,6 +6,10 @@ import BottomBar from './BottomBar';
 import { sharedStyles } from './styles';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { dialogflowConfig } from './config';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../../firebase-config';
 
 const styles = StyleSheet.create({
     container: {
@@ -28,7 +32,45 @@ class Chatbot extends Component {
         super();
         this.state = {
             messages: [],
+            userAvatar: '', // Estado para almacenar el avatar del usuario
         };
+    }
+
+    async componentDidMount() {
+        await this.fetchUserAvatar(); // Obtiene el avatar del usuario cuando el componente se monta
+        this.setInitialMessage();
+    }
+
+    async fetchUserAvatar() {
+        const db = getFirestore(initializeApp(firebaseConfig));
+        const user = getAuth().currentUser;
+
+        if (user) {
+            const userDoc = doc(db, 'Usuario', user.uid);
+            const userDocSnap = await getDoc(userDoc);
+
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                this.setState({ userAvatar: userData.avatar.image });
+            }
+        }
+    }
+
+    setInitialMessage() {
+        this.setState({
+            messages: [
+                {
+                    _id: 1,
+                    text: 'Hola, ¿en qué puedo ayudarte?',
+                    createdAt: new Date(),
+                    user: {
+                        _id: 2,
+                        name: 'React Native',
+                        avatar: this.state.userAvatar, // Usa el avatar del usuario
+                    },
+                },
+            ],
+        });
     }
 
     async sendMessage(text) {
@@ -42,7 +84,7 @@ class Chatbot extends Component {
                     user: {
                         _id: 2,
                         name: 'React Native',
-                        avatar: 'https://s3.us-east-2.amazonaws.com/biotec-io/robot.png',
+                        avatar: this.state.userAvatar, // Usa el avatar del usuario
                     },
                 };
     
@@ -62,24 +104,6 @@ class Chatbot extends Component {
     
         let message = messages[0];
         this.sendMessage(message.text);
-    }
-    
-
-    UNSAFE_componentWillMount() {
-        this.setState({
-            messages: [
-                {
-                    _id: 1,
-                    text: 'Hola, ¿en qué puedo ayudarte?',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        //avatar: 'https://s3.us-east-2.amazonaws.com/biotec-io/robot.png',
-                    },
-                },
-            ],
-        });
     }
 
     render() {

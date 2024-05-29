@@ -14,6 +14,7 @@ function LoginScreen() {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -31,13 +32,17 @@ function LoginScreen() {
             })
     }
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <View style={sharedStyles.container}>
             <View style={sharedStyles.espacioSuperior}></View>
             <Text style={sharedStyles.titulo}>Iniciar Sesión</Text>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('IniciarSesion')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
@@ -49,13 +54,21 @@ function LoginScreen() {
                 value={email}
             />
             <Text style={sharedStyles.textos}>Ingresa tu contraseña</Text>
-            <TextInput
-                onChangeText={setPassword}
-                style={sharedStyles.entradaTexto}
-                placeholder="Contraseña"
-                value={password}
-                secureTextEntry={true}
-            />
+            <View style={[styles.passwordInputContainer, sharedStyles.entradaTexto]}>
+                <TextInput
+                    onChangeText={setPassword}
+                    placeholder="Contraseña"
+                    style={styles.passwordInput}
+                    value={password}
+                    secureTextEntry={!showPassword} // Cambia entre true (ocultar) y false (mostrar)
+                />
+                <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
+                    <Image
+                        source={showPassword ? require('../../resources/images/eye-open.png') : require('../../resources/images/eye-closed.png')}
+                        style={styles.eyeIcon}
+                    />
+                </TouchableOpacity>
+            </View>
 
             <TouchableOpacity onPress={() => navigation.navigate('RecuperarContraseña')} style={[sharedStyles.botonTexto, { borderWidth: 0 }]}>
                 <Text style={[sharedStyles.textoBoton, { fontSize: 12 }]}>¿Olvidaste tu contraseña?</Text>
@@ -76,4 +89,23 @@ export default function PantallaCrearCuenta() {
 
 const styles = StyleSheet.create({
     sharedStyles,
+    passwordInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: '#ccc',
+        paddingHorizontal: 8,
+    },
+    passwordInput: {
+        flex: 1,
+        paddingVertical: 12,
+    },
+    eyeIconContainer: {
+        padding: 10,
+    },
+    eyeIcon: {
+        width: 30,
+        height: 20,
+    },
 });

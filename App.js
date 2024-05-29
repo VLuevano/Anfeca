@@ -2,20 +2,20 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { GestureHandlerRootView} from 'react-native-gesture-handler'
-import PantallaInicio from './src/Vista/frmPantallaInicio'; 
-import CrearCuenta from './src/Vista/frmCrearCuenta'; 
-import IniciarSesion from './src/Vista/frmIniciarSesion'; 
-import CrearCuenta1 from './src/Vista/frmCrearCuenta1'; 
-import IniciarSesion1 from './src/Vista/frmIniciarSesion1'; 
-import MenuPrincipal from './src/Vista/frmMenuPrincipal'; 
-import RecuperarContraseña from './src/Vista/frmRecuperarContraseña'; 
-import Cuenta from './src/Vista/frmCuentaUsuario'; 
-import Organizaciones from './src/Vista/frmOrganizaciones';
-import Chatbot from './src/Vista/frmChatbot';
-import Info from './src/Vista/frmInfoQuizz'
-import Historial from './src/Vista/frmHistorial'
-import Resumen from './src/Vista/frmResumen'
-import Quizz from './src/Vista/frmQuizz'
+import PantallaInicio from './src/screens/frmPantallaInicio'; 
+import CrearCuenta from './src/screens/frmCrearCuenta'; 
+import IniciarSesion from './src/screens/frmIniciarSesion'; 
+import CrearCuenta1 from './src/screens/frmCrearCuenta1'; 
+import IniciarSesion1 from './src/screens/frmIniciarSesion1'; 
+import MenuPrincipal from './src/screens/frmMenuPrincipal'; 
+import RecuperarContraseña from './src/screens/frmRecuperarContraseña'; 
+import Cuenta from './src/screens/frmCuentaUsuario'; 
+import Organizaciones from './src/screens/frmOrganizaciones';
+import Chatbot from './src/screens/frmChatbot';
+import Info from './src/screens/frmInfoQuizz'
+import Historial from './src/screens/frmHistorial'
+import Resumen from './src/screens/frmResumen'
+import Quizz from './src/screens/frmQuizz'
 
 const Stack = createStackNavigator();
 

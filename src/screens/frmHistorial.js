@@ -50,7 +50,7 @@ const HistorialScreen = () => {
             <Text style={sharedStyles.titulo}>Historial</Text>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('MenuPrincipal')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>

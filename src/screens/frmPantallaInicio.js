@@ -9,12 +9,12 @@ export default function PantallaInicio() {
 
   return (
     <ImageBackground
-      source={require('../../Recursos/Imágenes/FondoInicio.jpg')}
+      source={require('../../resources/images/FondoInicio.jpg')}
       style={styles.container}
     >
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../Recursos/Imágenes/VITA3.png')}
+          source={require('../../resources/images/VITA3.png')}
           style={styles.logo}
         />
       </View>

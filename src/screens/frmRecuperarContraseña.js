@@ -40,7 +40,7 @@ const ForgotPasswordScreen = () => {
             <Text style={sharedStyles.titulo}>Recuperar contraseña</Text>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('IniciarSesion1')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>

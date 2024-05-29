@@ -1,47 +1,63 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, FlatList, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase-config';
-import { Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { sharedStyles } from './styles';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { setDoc } from 'firebase/firestore';
-import { doc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-function StepOne({ onNext }) {
-
+function StepOne({ onNext, userData }) {
     const navigation = useNavigation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState(userData.email || '');
+    const [password, setPassword] = useState(userData.password || '');
+    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (email.trim() === '' || password.trim() === '') {
             Alert.alert('Error', 'Por favor ingresa un correo electrónico y una contraseña.');
             return;
         }
-        // Validar que el correo electrónico sea válido
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            Alert.alert('Error', 'Por favor ingresa un correo electrónico válido.');
+
+        // Verificación de dominio válido
+        const domainRegex = /^[^\s@]+\@[^\s@]+\.[a-zA-Z]{2,}$/;
+        const domainList = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+        const emailDomain = email.split('@')[1];
+
+        if (!domainRegex.test(email) || !domainList.includes(emailDomain)) {
+            Alert.alert('Error', 'Por favor ingresa un correo electrónico con un dominio válido.');
             return;
         }
 
-        // Validar que la contraseña tenga al menos 6 caracteres
         if (password.length < 6) {
             Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
             return;
         }
+
+        try {
+            const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+            if (signInMethods.length > 0) {
+                Alert.alert('Error', 'Ya existe una cuenta con este correo electrónico.');
+                return;
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Error verificando el correo electrónico.');
+            console.error('Error verificando el correo electrónico:', error);
+            return;
+        }
+
         onNext({ email, password });
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -49,7 +65,7 @@ function StepOne({ onNext }) {
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
@@ -62,13 +78,21 @@ function StepOne({ onNext }) {
                 value={email}
             />
             <Text style={sharedStyles.textos}>Ingresa tu contraseña</Text>
-            <TextInput
-                onChangeText={setPassword}
-                placeholder="Contraseña"
-                style={sharedStyles.entradaTexto}
-                value={password}
-                secureTextEntry={true}
-            />
+            <View style={[styles.passwordInputContainer, sharedStyles.entradaTexto]}>
+                <TextInput
+                    onChangeText={setPassword}
+                    placeholder="Contraseña"
+                    style={styles.passwordInput}
+                    value={password}
+                    secureTextEntry={!showPassword} // Cambia entre true (ocultar) y false (mostrar)
+                />
+                <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
+                    <Image
+                        source={showPassword ? require('../../resources/images/eye-open.png') : require('../../resources/images/eye-closed.png')}
+                        style={styles.eyeIcon}
+                    />
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity onPress={handleNext} style={sharedStyles.boton}>
                 <Text style={sharedStyles.textoBoton}>Continuar</Text>
             </TouchableOpacity>
@@ -76,10 +100,10 @@ function StepOne({ onNext }) {
     );
 }
 
-function StepTwo({ onNext }) {
+function StepTwo({ onNext, userData }) {
 
     const navigation = useNavigation();
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState(userData.username || '');
 
     const handleNext = () => {
         if (username.trim() === '') {
@@ -94,7 +118,7 @@ function StepTwo({ onNext }) {
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
@@ -113,10 +137,10 @@ function StepTwo({ onNext }) {
     );
 }
 
-function StepThree({ onNext }) {
+function StepThree({ onNext, userData }) {
 
     const navigation = useNavigation();
-    const [gender, setGender] = useState('Hombre');
+    const [gender, setGender] = useState(userData.gender || 'Hombre');
 
     const handleNext = () => {
         onNext({ gender });
@@ -127,7 +151,7 @@ function StepThree({ onNext }) {
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
@@ -148,7 +172,7 @@ function StepThree({ onNext }) {
     );
 }
 
-function StepFour({ onNext, onSelect }) {
+function StepFour({ onNext, onSelect, userData }) {
 
     const navigation = useNavigation();
     const [avatars, setAvatars] = useState([]);
@@ -219,7 +243,7 @@ function StepFour({ onNext, onSelect }) {
             <View style={sharedStyles.espacioSuperior}></View>
             <TouchableOpacity style={sharedStyles.botonVolver} onPress={() => navigation.navigate('CrearCuenta')}>
                 <Image
-                    source={require('../../Recursos/Imágenes/flechaRetroceder.png')}
+                    source={require('../../resources/images/flechaRetroceder.png')}
                     style={sharedStyles.iconoVolver}
                 />
             </TouchableOpacity>
@@ -228,6 +252,7 @@ function StepFour({ onNext, onSelect }) {
             <FlatList
                 data={avatars}
                 horizontal
+                style={{ flexGrow: 0 }}
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => handleAvatarPress(item)} style={{ margin: 5 }}>
                         <Image source={{ uri: item.image }} style={{ width: 100, height: 100, borderRadius: 50 }} />
@@ -269,57 +294,66 @@ function RegistrationScreen() {
 
     const handleNext = (data) => {
         const newUserData = { ...userData, ...data };
-        console.log('Datos recibidos en handleNext:', newUserData); // Añade esta línea
+        console.log('Datos recibidos en handleNext:', newUserData);
         setUserData(newUserData);
         if (step < 4) {
             setStep(step + 1);
         } else {
-            console.log('Datos de newUserData antes de guardar en Firestore:', newUserData); // Añade esta línea
-            // Crear la cuenta con el correo electrónico y la contraseña
-            createUserWithEmailAndPassword(auth, newUserData.email, newUserData.password)
-                .then((userCredential) => {
-                    console.log("Cuenta creada exitosamente");
-                    const user = userCredential.user;
-
-                    // Guardar datos adicionales del usuario en Firestore
-                    const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
-
-                    // Crea un documento en la colección "usuarios"
-                    setDoc(doc(db, 'Usuario', user.uid), {
-                        userId: user.uid, // Puedes usar el ID del usuario como clave
-                        email: newUserData.email,
-                        username: newUserData.username,
-                        gender: newUserData.gender,
-                        dateOfBirth: newUserData.dateOfBirth, // Guardar la fecha de nacimiento como una cadena de texto
-                        avatar: newUserData.selectedAvatar, // Guardar el avatar seleccionado
-                    })
-                        .then(() => {
-                            console.log('Datos del usuario guardados en Firestore');
-                            navigation.navigate('MenuPrincipal');
-                        })
-                        .catch((error) => {
-                            console.error('Error al guardar datos del usuario en Firestore:', error);
-                        });
-                })
-                .catch(error => {
-                    console.error("Error al crear la cuenta:", error);
-                });
-
+            // Resto del código...
         }
     };
 
+    const handleBack = () => {
+        if (step > 1) {
+            setStep(step - 1);
+        }
+    };
+
+    // Función para actualizar los datos del usuario al retroceder
+    const updateUserDataOnBack = (data) => {
+        const newUserData = { ...userData, ...data };
+        setUserData(newUserData);
+    };
+
+
     return (
         <View>
-            {step === 1 && <StepOne onNext={handleNext} />}
-            {step === 2 && <StepTwo onNext={handleNext} />}
-            {step === 3 && <StepThree onNext={handleNext} />}
-            {step === 4 && <StepFour onNext={handleNext} />}
+            {step === 1 && <StepOne onNext={handleNext} userData={userData} />}
+            {step === 2 && <StepTwo onNext={handleNext} userData={userData} />}
+            {step === 3 && <StepThree onNext={handleNext} userData={userData} />}
+            {step === 4 && <StepFour onNext={handleNext} onSelect={updateUserDataOnBack} userData={userData} />}
+            {step > 1 && (
+                <TouchableOpacity style={sharedStyles.botonVolver} onPress={handleBack}>
+                    <Image
+                        source={require('../../resources/images/flechaRetroceder.png')}
+                        style={sharedStyles.iconoVolver}
+                    />
+                </TouchableOpacity>
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    sharedStyles,
+    passwordInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: '#ccc',
+        paddingHorizontal: 8,
+    },
+    passwordInput: {
+        flex: 1,
+        paddingVertical: 12,
+    },
+    eyeIconContainer: {
+        padding: 10,
+    },
+    eyeIcon: {
+        width: 30,
+        height: 20,
+    },
 });
 
 export default RegistrationScreen;
