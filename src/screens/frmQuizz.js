@@ -83,7 +83,7 @@ const Quizz = () => {
             const fechaActual = new Date().toLocaleString();
 
             const nuevoResultado = {
-                tema: titulo, // Incluimos el tema aquí
+                tema: titulo,
                 aciertos: respuestasCorrectas,
                 fecha: fechaActual,
                 totalPreguntas

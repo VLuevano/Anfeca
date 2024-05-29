@@ -60,7 +60,7 @@ function LoginScreen() {
                     placeholder="Contraseña"
                     style={styles.passwordInput}
                     value={password}
-                    secureTextEntry={!showPassword} // Cambia entre true (ocultar) y false (mostrar)
+                    secureTextEntry={!showPassword}
                 />
                 <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
                     <Image

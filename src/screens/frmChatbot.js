@@ -32,12 +32,12 @@ class Chatbot extends Component {
         super();
         this.state = {
             messages: [],
-            userAvatar: '', // Estado para almacenar el avatar del usuario
+            userAvatar: '',
         };
     }
 
     async componentDidMount() {
-        await this.fetchUserAvatar(); // Obtiene el avatar del usuario cuando el componente se monta
+        await this.fetchUserAvatar();
         this.setInitialMessage();
     }
 
@@ -66,7 +66,7 @@ class Chatbot extends Component {
                     user: {
                         _id: 2,
                         name: 'React Native',
-                        avatar: this.state.userAvatar, // Usa el avatar del usuario
+                        avatar: this.state.userAvatar,
                     },
                 },
             ],
@@ -84,7 +84,7 @@ class Chatbot extends Component {
                     user: {
                         _id: 2,
                         name: 'React Native',
-                        avatar: this.state.userAvatar, // Usa el avatar del usuario
+                        avatar: this.state.userAvatar,
                     },
                 };
     

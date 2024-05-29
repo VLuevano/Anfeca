@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
-        justifyContent: 'space-between', // Alinea los elementos en el eje principal
+        justifyContent: 'space-between',
     },
     barraBuscar: {
         flexDirection: 'row',
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     temaContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between", // Alinear los elementos a los lados
+        justifyContent: "space-between",
         padding: 10,
     },
     textContainer: {

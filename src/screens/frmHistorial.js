@@ -12,7 +12,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 const HistorialScreen = () => {
-    const [historialJuegos, setHistorialJuegos] = useState([]); // Estado para almacenar los datos
+    const [historialJuegos, setHistorialJuegos] = useState([]);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
-        borderRadius: 20, // Borde de radio de 20
+        borderRadius: 20,
         width: '100%',
-        marginTop: 10, // Espacio entre cada componente
+        marginTop: 10,
     },
     text: {
         fontSize: 16,

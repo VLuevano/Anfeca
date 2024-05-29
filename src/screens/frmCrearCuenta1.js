@@ -18,7 +18,7 @@ function StepOne({ onNext, userData }) {
     const navigation = useNavigation();
     const [email, setEmail] = useState(userData.email || '');
     const [password, setPassword] = useState(userData.password || '');
-    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleNext = async () => {
         if (email.trim() === '' || password.trim() === '') {
@@ -84,7 +84,7 @@ function StepOne({ onNext, userData }) {
                     placeholder="Contraseña"
                     style={styles.passwordInput}
                     value={password}
-                    secureTextEntry={!showPassword} // Cambia entre true (ocultar) y false (mostrar)
+                    secureTextEntry={!showPassword}
                 />
                 <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
                     <Image
@@ -226,6 +226,10 @@ function StepFour({ onNext, onSelect, userData }) {
             Alert.alert('Error', 'Debes tener al menos 10 años para registrarte.');
             return;
         }
+        if (ageDifference > 100) {
+            Alert.alert('Error', 'Debes de ingresar una edad válida.');
+            return;
+        }
         // Formatear la fecha de nacimiento a una cadena de texto en el formato "yyyy-mm-dd"
         const dateOfBirthString = `${birthDate.getFullYear()}-${birthDate.getMonth() + 1}-${birthDate.getDate()}`;
         onNext({ selectedAvatar, dateOfBirth: dateOfBirthString });
@@ -299,7 +303,7 @@ function RegistrationScreen() {
         if (step < 4) {
             setStep(step + 1);
         } else {
-            console.log('Datos de newUserData antes de guardar en Firestore:', newUserData); // Añade esta línea
+            console.log('Datos de newUserData antes de guardar en Firestore:', newUserData);
             // Crear la cuenta con el correo electrónico y la contraseña
             createUserWithEmailAndPassword(auth, newUserData.email, newUserData.password)
                 .then((userCredential) => {
@@ -307,16 +311,16 @@ function RegistrationScreen() {
                     const user = userCredential.user;
 
                     // Guardar datos adicionales del usuario en Firestore
-                    const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
+                    const db = getFirestore(app);
 
                     // Crea un documento en la colección "usuarios"
                     setDoc(doc(db, 'Usuario', user.uid), {
-                        userId: user.uid, // Puedes usar el ID del usuario como clave
+                        userId: user.uid,
                         email: newUserData.email,
                         username: newUserData.username,
                         gender: newUserData.gender,
-                        dateOfBirth: newUserData.dateOfBirth, // Guardar la fecha de nacimiento como una cadena de texto
-                        avatar: newUserData.selectedAvatar, // Guardar el avatar seleccionado
+                        dateOfBirth: newUserData.dateOfBirth,
+                        avatar: newUserData.selectedAvatar, 
                     })
                         .then(() => {
                             console.log('Datos del usuario guardados en Firestore');

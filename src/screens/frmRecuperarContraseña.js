@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image, Alert } fro
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { sharedStyles } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import Modal from 'react-native-modal'; // Importa el componente Modal
+import Modal from 'react-native-modal';
 
 const ForgotPasswordScreen = () => {
 
@@ -12,7 +12,7 @@ const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const [isModalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const auth = getAuth();
 
@@ -24,9 +24,9 @@ const ForgotPasswordScreen = () => {
             })
             .catch((error) => {
                 Alert.alert('Error:', "Ingrese un correo válido\n "+ error);
-                console.log('Error:', error);  // Agregar este console.log
+                console.log('Error:', error);
             });
-            setModalVisible(true); // Mostrar el modal después de actualizar el mensaje
+            setModalVisible(true);
     };
 
     const toggleModal = () => {

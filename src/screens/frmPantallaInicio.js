@@ -27,7 +27,7 @@ export default function PantallaInicio() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('IniciarSesion')} // Cambiar a nombre registrado de la pantalla
+          onPress={() => navigation.navigate('IniciarSesion')}
         >
           <Text style={sharedStyles.textoBoton}>Iniciar sesión</Text>
         </TouchableOpacity>

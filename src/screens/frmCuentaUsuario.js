@@ -21,9 +21,11 @@ const backgroundP = "#E0E6F6"
 
 const app = initializeApp(firebaseConfig);
 
-export default function CuentaScreen() {
+const domainList = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
 
+export default function CuentaScreen() {
     const db = getFirestore(app);
+    const navigation = useNavigation();
 
     const [username, setNombreUsuario] = useState('');
     const [email, setCorreo] = useState('');
@@ -32,8 +34,6 @@ export default function CuentaScreen() {
     const [message, setMessage] = useState('');
     const [avatarUrl, setAvatarUrl] = useState('');
 
-    const navigation = useNavigation();
-
     useEffect(() => {
         const fetchUserData = async () => {
             const userDoc = doc(db, 'Usuario', getAuth().currentUser.uid);
@@ -41,12 +41,12 @@ export default function CuentaScreen() {
 
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
-                console.log('Datos del usuario recuperados de Firestore:', userData); // Agrega esta línea
+                console.log('Datos del usuario recuperados de Firestore:', userData);
                 setNombreUsuario(userData.username);
                 setCorreo(userData.email);
                 setSexo(userData.gender);
                 setDateOfBirth(userData.dateOfBirth);
-                setAvatarUrl(userData.avatar.image); // Recuperar la URL de la imagen del avatar
+                setAvatarUrl(userData.avatar.image);
             }
         };
 
@@ -68,11 +68,18 @@ export default function CuentaScreen() {
         const user = auth.currentUser;
 
         if (user) {
-            try {
-                // Intenta actualizar el correo electrónico
-                await updateEmail(user, email);
+            if (!validateEmail(email)) {
+                Alert.alert('Error', 'Por favor ingresa un correo electrónico válido.');
+                return;
+            }
 
-                // Si la actualización fue exitosa, actualiza el perfil y los datos en Firestore
+            if (!username.trim()) {
+                Alert.alert('Error', 'Por favor ingresa un nombre de usuario.');
+                return;
+            }
+
+            try {
+                await updateEmail(user, email);
                 await updateProfile(user, {
                     displayName: username,
                     email: email,
@@ -85,18 +92,19 @@ export default function CuentaScreen() {
                     gender: gender,
                     dateOfBirth: dateOfBirth,
                 }, { merge: true });
-
-                // Si todo fue exitoso, establece un mensaje de éxito
-                setMessage('Los cambios se han guardado con éxito.');
+                Alert.alert('Los cambios se han guardado con éxito');
 
             } catch (error) {
-                // Si hubo un error, establece un mensaje de error
-                setMessage('Hubo un error al guardar los cambios: ' + error.message);
+                Alert.alert('Hubo un error al guardar los cambios: ' + error.message);
             }
-
-            // Muestra una alerta con el mensaje
-            Alert.alert(message);
         }
+    };
+
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+\@[^\s@]+\.[a-zA-Z]{2,}$/;
+        const emailDomain = email.split('@')[1];
+        return emailRegex.test(email) && domainList.includes(emailDomain);
     };
 
     return (
@@ -109,11 +117,11 @@ export default function CuentaScreen() {
                 </TouchableOpacity>
                 {avatarUrl ? (
                     <Image
-                        source={{ uri: avatarUrl }} // Usar la URL del avatar para mostrar la imagen
+                        source={{ uri: avatarUrl }}
                         style={styles.fotoPerfil}
                     />
                 ) : (
-                    <Text>Cargando avatar...</Text> // Mostrar un mensaje de carga mientras la URL del avatar se está cargando
+                    <Text>Cargando avatar...</Text>
                 )}
             </View>
 
@@ -159,7 +167,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 40,
         backgroundColor: '#E0E6F6',
-        justifyContent: 'space-between', // Alinea los elementos en el eje principal
+        justifyContent: 'space-between',
     },
     items: {
         flexDirection: "row",
@@ -194,6 +202,7 @@ const styles = StyleSheet.create({
     fotoPerfil: {
         width: 100,
         height: 100,
+        borderRadius: 50
     },
     perfil: {
         alignContent: "center",
@@ -201,13 +210,13 @@ const styles = StyleSheet.create({
         marginTop: 25,
     },
     logoutButton: {
-        position: 'absolute', // Posiciona el botón de cierre de sesión de manera absoluta
-        top: 0, // Alinea el botón con la parte superior de la vista
-        right: 0, // Alinea el botón con el lado derecho de la vista
-        padding: 10, // Agrega un poco de relleno alrededor del botón
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        padding: 10,
     },
     logoutButtonText: {
-        color: 'red', // Puedes cambiar esto al color que prefieras
+        color: 'red',
     },
     sharedStyles,
 });
