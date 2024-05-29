@@ -299,7 +299,36 @@ function RegistrationScreen() {
         if (step < 4) {
             setStep(step + 1);
         } else {
-            // Resto del código...
+            console.log('Datos de newUserData antes de guardar en Firestore:', newUserData); // Añade esta línea
+            // Crear la cuenta con el correo electrónico y la contraseña
+            createUserWithEmailAndPassword(auth, newUserData.email, newUserData.password)
+                .then((userCredential) => {
+                    console.log("Cuenta creada exitosamente");
+                    const user = userCredential.user;
+
+                    // Guardar datos adicionales del usuario en Firestore
+                    const db = getFirestore(app); // Asegúrate de tener inicializada tu instancia de Firebase
+
+                    // Crea un documento en la colección "usuarios"
+                    setDoc(doc(db, 'Usuario', user.uid), {
+                        userId: user.uid, // Puedes usar el ID del usuario como clave
+                        email: newUserData.email,
+                        username: newUserData.username,
+                        gender: newUserData.gender,
+                        dateOfBirth: newUserData.dateOfBirth, // Guardar la fecha de nacimiento como una cadena de texto
+                        avatar: newUserData.selectedAvatar, // Guardar el avatar seleccionado
+                    })
+                        .then(() => {
+                            console.log('Datos del usuario guardados en Firestore');
+                            navigation.navigate('MenuPrincipal');
+                        })
+                        .catch((error) => {
+                            console.error('Error al guardar datos del usuario en Firestore:', error);
+                        });
+                })
+                .catch(error => {
+                    console.error("Error al crear la cuenta:", error);
+                });
         }
     };
 
